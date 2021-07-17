@@ -1,0 +1,61 @@
+﻿<UserControl x:Class="BodyPosition.MVVM.View.UserManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BodyPosition.MVVM.View"
+             xmlns:viewModel="clr-namespace:BodyPosition.MVVM.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="950" d:DesignWidth="1720">
+    
+    <StackPanel  Background="#F1EFF1" Orientation="Vertical">
+        <TextBlock Text="ข้อมูลและจำนวนผู้ใช้ในระบบ"
+                   Foreground="Black"
+                   HorizontalAlignment="Center"
+                   Margin="50,50,50,30"
+                   FontSize="28"/>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <Button Width="200"
+                        Height="100"
+                        FontSize="20"
+                        Foreground="Black"
+                        Background="LightGray"
+                        BorderBrush="Gray"
+                        Click="AddPerson">
+                Add
+            </Button>
+            <Button Width="200"
+                        Height="100"
+                        FontSize="20"
+                        Margin="30,0,0,0"
+                        Foreground="Black"
+                        Background="LightGray"
+                        BorderBrush="Gray"
+                        Click="EditPerson">
+                Edit
+            </Button>
+            
+            <Button Width="200"
+                        Height="100"
+                        FontSize="20"
+                        Margin="30,0,0,0"
+                        Foreground="Black"
+                        Background="LightGray"
+                        BorderBrush="Gray"
+                        Click="DeletePerson">
+                Delete
+            </Button>
+        </StackPanel>
+        <Grid Margin="60,40,60,50"
+              Height="650">
+            <ContentControl Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="10"
+                            VerticalAlignment="Top"
+                        Content="{Binding CurrentView}"/>
+            
+        </Grid>
+    </StackPanel>
+</UserControl>
