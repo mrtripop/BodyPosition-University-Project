@@ -8,14 +8,13 @@ namespace BodyPosition.MVVM.Model
 {
     class AngleModel
     {
-        public int id { get; set; }
-        public int time { get; set; }
-        public double pelvis { get; set; }
-        public double knee { get; set; }
-        public double ankle { get; set; }
-        public override string ToString()
-        {
-            return this.id + " " + this.time + " " + this.pelvis + " " + this.knee + " " + this.ankle;
-        }
+        public int ID { get; set; }
+        public string Time { get; set; }
+        public double FrontPelvis { get; set; }
+        public double RightShoulder { get; set; }
+        public double LeftShoulder { get; set; }
+        public double Pelvis { get; set; }
+        public double Knee { get; set; }
+        public double Ankle { get; set; }
     }
 }

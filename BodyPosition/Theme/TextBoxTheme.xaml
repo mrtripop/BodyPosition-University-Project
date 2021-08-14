@@ -16,7 +16,7 @@
                                      BorderThickness="0"
                                      Background="Transparent"
                                      VerticalAlignment="Center"
-                                     Padding="5"
+                                     Padding="1"
                                      Foreground="#ffffff"
                                      x:Name="SearchBox"/>
 

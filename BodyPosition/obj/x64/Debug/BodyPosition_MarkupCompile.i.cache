@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\App.xaml
-9196253294
-1-1489838330
-22-627091483
-282047620335
-MainWindow.xaml;MVVM\View\CustomListView.xaml;MVVM\View\DatabaseView.xaml;MVVM\View\HomeView.xaml;MVVM\View\UserManagementView.xaml;MVVM\View\UserSelectionView.xaml;Theme\ButtonTheme.xaml;Theme\MenuButtonTheme.xaml;Theme\TextBoxTheme.xaml;
+91764623721
+41318887270
+24791688772
+321409439777
+MainWindow.xaml;MVVM\View\DatabaseView.xaml;MVVM\View\HomeView.xaml;MVVM\View\RegisterPage.xaml;MVVM\View\TestSelectionView.xaml;MVVM\View\UserSelectionView.xaml;Theme\ButtonTheme.xaml;Theme\MenuButtonTheme.xaml;Theme\TextBoxTheme.xaml;
 
-True
+False
 

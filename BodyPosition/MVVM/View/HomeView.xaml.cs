@@ -3,16 +3,25 @@ using BodyPosition.MVVM.Model;
 using LightBuzz.Vitruvius;
 using Microsoft.Kinect;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Navigation;
+using System.IO;
+using Newtonsoft.Json;
+using System.Linq;
+using Microsoft.Win32;
 
 namespace BodyPosition.MVVM.View
 {
     /// <summary>
     /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class HomeView : UserControl
+    public partial class HomeView : Page
     {
+        #region parameter
+
         KinectSensor _sensor;
         MultiSourceFrameReader _reader;
         PlayersController _playersController;
@@ -22,27 +31,55 @@ namespace BodyPosition.MVVM.View
         JointType spineMid = JointType.SpineMid;
         JointType hipLeft = JointType.HipLeft;
 
-        JointType kneeRight = JointType.KneeRight;
-        JointType ankleRight = JointType.AnkleRight;
-        JointType footRight = JointType.FootRight;
-
         JointType kneeLeft = JointType.KneeLeft;
         JointType ankleLeft = JointType.AnkleLeft;
         JointType footLeft = JointType.FootLeft;
 
-        JointType spineShoulder = JointType.SpineShoulder;
-        JointType shoulderRight = JointType.ShoulderRight;
-        JointType shoulderLeft = JointType.ShoulderLeft;
+        private bool readyToRecord = true;
+        private bool save = false;
 
-        PersonModel person = new PersonModel();
+        readonly string FOLDER_PATH;
+        readonly string folder_text;
 
-        VitruviusRecorder recorder = new VitruviusRecorder();
+        private bool frontDraw = true;
 
-        readonly string FOLDER_PATH = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "video");
+        private UserModel myUserModelHome;
+        public UserModel UserModelHome
+        {
+            get { return myUserModelHome; }
+            set { myUserModelHome = value; }
+        }
 
-        public HomeView()
+        private TestModel myTestModelHome;
+        public TestModel TestModelHome
+        {
+            get { return myTestModelHome; }
+            set { myTestModelHome = value; }
+        }
+
+        List<AngleModel> angleList = new List<AngleModel>();
+        List<Body> trackedBodies = new List<Body>();
+
+        SolidColorBrush blueColor = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0xff, 0xff, 0x00, 0x66));
+        SolidColorBrush redColor = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
+
+
+        #endregion
+
+        #region main
+        public HomeView(UserModel userModelHome, TestModel testModelHome)
         {
             InitializeComponent();
+
+            UserModelHome = userModelHome;
+            TestModelHome = testModelHome;
+
+            userUID.Text = UserModelHome.ID.ToString();
+            userName.Text = UserModelHome.FirstName + " " + UserModelHome.LastName;
+            testName.Text = TestModelHome.TestName;
+
+            folder_text = Path.Combine(AppDomain.CurrentDomain.BaseDirectory +TestModelHome.TestName + ".txt");
+            FOLDER_PATH = Path.Combine(AppDomain.CurrentDomain.BaseDirectory +TestModelHome.TestName + "video");
 
             _sensor = KinectSensor.GetDefault();
 
@@ -54,16 +91,23 @@ namespace BodyPosition.MVVM.View
                     FrameSourceTypes.Depth |
                     FrameSourceTypes.Infrared |
                     FrameSourceTypes.Body);
-                _reader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
+                if (!save)
+                {
+                    _reader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
+                }
+
 
                 _playersController = new PlayersController();
                 _playersController.BodyEntered += UserReporter_BodyEntered;
                 _playersController.BodyLeft += UserReporter_BodyLeft;
                 _playersController.Start();
+
+
             }
         }
+        #endregion
 
-        
+        #region method
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             if (_playersController != null)
@@ -95,7 +139,7 @@ namespace BodyPosition.MVVM.View
                 {
                     if (viewer.Visualization == Visualization.Color)
                     {
-                        viewer.Image = frame.ToBitmap();
+                        viewer.Image = frame.ToBitmap(); 
                     }
                 }
             }
@@ -113,28 +157,56 @@ namespace BodyPosition.MVVM.View
 
                     if (body != null)
                     {
-                        viewer.DrawBody(body);
+                        viewer.DrawBody(body, frontDraw);
 
-                        //spacePelvisFront.Update(body.Joints[_start1], body.Joints[_center1], body.Joints[_end1], 50);
-                        //spaceShoulderRight.Update(body.Joints[_start2], body.Joints[_center2], body.Joints[_end2], 50);
-                        //spaceShoulderLeft.Update(body.Joints[_start3], body.Joints[_center3], body.Joints[_end3], 50);
+                        double durationLeft = body.DurationLeft();
+                        double durationRight = body.DurationRight();
 
-                        angleSidePelvis.Update(body.Joints[spineMid], body.Joints[hipLeft], body.Joints[kneeLeft], 50);
-                        angleKnee.Update(body.Joints[hipLeft], body.Joints[kneeLeft], body.Joints[ankleLeft], 50);
-                        angleAnkle.Update(body.Joints[kneeLeft], body.Joints[ankleLeft], body.Joints[footLeft], 50);
+                        //Point shoulderR = new Point(body.Joints[JointType.ShoulderRight].Position.X, body.Joints[JointType.ShoulderRight].Position.Y);
+                        //Point shoulderL = new Point(body.Joints[JointType.ShoulderLeft].Position.X, body.Joints[JointType.ShoulderLeft].Position.Y);
+                        //Point spine = new Point(body.Joints[JointType.ShoulderRight].Position.X, body.Joints[JointType.SpineMid].Position.Y);
 
-                        //angle.pelvis = spacePelvisFront.Angle;
-                        //angle.knee = spaceShoulderRight.Angle;
-                        //angle.ankle = spaceShoulderLeft.Angle;
-
-                        //if (record)
+                        //if (frontDraw)
                         //{
-                        //    SqliteDataAccess.SaveAngle(angle);
+                            anglePelvisFront.Update(body.Joints[spineMid], body.Joints[spineBase], body.Joints[hipRight], 50);
+                            //spaceShoulderRight.Update(spine, shoulderR, shoulderR, 50);
+                            //spaceShoulderLeft.Update(spine, shoulderL, shoulderL, 50);
+
+                            angleSidePelvis.Clear();
+                            angleKnee.Clear();
+                            angleAnkle.Clear();
+                        //}
+                        //else
+                        //{
+                            anglePelvisFront.Clear();
+
+                            angleSidePelvis.Update(body.Joints[spineMid], body.Joints[hipLeft], body.Joints[kneeLeft], 50);
+                            angleKnee.Update(body.Joints[hipLeft], body.Joints[kneeLeft], body.Joints[ankleLeft], 50);
+                            angleKnee.SweepDirection = SweepDirection.Counterclockwise;
+
+                            angleAnkle.Update(body.Joints[kneeLeft], body.Joints[ankleLeft], body.Joints[footLeft], 50);
                         //}
 
-                        //tblPelvisFront.Text = ((int)spacePelvisFront.Angle).ToString(); //space
-                        //tblShoulderRight.Text = ((int)spaceShoulderRight.Angle).ToString();  //space
-                        //tblShoulderLeft.Text = ((int)spaceShoulderLeft.Angle).ToString();  //space
+                        DateTime currentTime = DateTime.Now;
+
+                        angle.Time = currentTime.ToString("hh:mm ss");
+                        angle.FrontPelvis = anglePelvisFront.Angle;
+                        angle.RightShoulder = durationRight;
+                        angle.LeftShoulder = durationLeft;
+                        angle.Pelvis = angleSidePelvis.Angle;
+                        angle.Knee = angleKnee.Angle;
+                        angle.Ankle = angleAnkle.Angle;
+
+                        //if (!record)
+                        //{
+                        //    statusText.Text = "recording...";
+                        //    trackedBodies.Add(body);
+                        //    angleList.Add(angle);
+                        //}
+
+                        tblPelvisFront.Text = ((int)anglePelvisFront.Angle).ToString();
+                        tblShoulderRight.Text = durationRight.ToString("0.00");
+                        tblShoulderLeft.Text = durationLeft.ToString("0.00");
 
                         tblPelvisSideAngle.Text = ((int)angleSidePelvis.Angle).ToString();
                         tblKneeAngle.Text = ((int)angleKnee.Angle).ToString();
@@ -142,20 +214,19 @@ namespace BodyPosition.MVVM.View
                     }
                 }
             }
-
         }
 
-        void UserReporter_BodyEntered(object sender, PlayersControllerEventArgs e)
+        void UserReporter_BodyEntered(object sender, UsersControllerEventArgs e)
         {
         }
 
-        void UserReporter_BodyLeft(object sender, PlayersControllerEventArgs e)
+        void UserReporter_BodyLeft(object sender, UsersControllerEventArgs e)
         {
             viewer.Clear();
 
-            //angle1.Clear();
-            //angle2.Clear();
-            //angle3.Clear();
+            anglePelvisFront.Clear();
+            spaceShoulderRight.Clear();
+            spaceShoulderLeft.Clear();
             angleSidePelvis.Clear();
             angleKnee.Clear();
             angleAnkle.Clear();
@@ -170,48 +241,112 @@ namespace BodyPosition.MVVM.View
 
         private void recordVideoAndAngle(object sender, RoutedEventArgs e)
         {
-            if (recorder.IsRecording)
+            //if (record)
+            //{
+            //    recordButton.Background = blueColor;
+            //    recordButton.Content = "Record";
+            //    record = false;
+            //}
+            //else
+            //{
+            //    recordButton.Background = redColor;
+            //    recordButton.Content = "Recording";
+            //    record = true;
+            //}       
+            if (readyToRecord)
             {
-                recorder.Stop();
+                if (MessageBox.Show("Recording using the Kinect Studio API generates HUGE files (~140 MB for 1 second). Are you sure, you want to proceed?",
+                    "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    var sfd = new SaveFileDialog();
+                    sfd.Filter = "Kinect Eventstream|*.xef|All files|*.*";
+                    sfd.Title = "Save the recording";
+
+                    if (sfd.ShowDialog() == true)
+                    {
+                        KinectManager.Instance.StartRecording(sfd.FileName);
+                        readyToRecord = false;
+                    }
+
+                    recordButton.Background = redColor;
+                    recordButton.Content = "Recording...";
+                }
             }
             else
             {
-                recorder.Clear();
+                KinectManager.Instance.StopRecording();
+                readyToRecord = true;
 
-                recorder.Visualization = Visualization.Color;
-                recorder.Folder = FOLDER_PATH;
-
+                recordButton.Background = blueColor;
+                recordButton.Content = "Record";
             }
-        }
-
-        private void AddTestUser(object sender, RoutedEventArgs e)
-        {
-            //SqliteDataAccess.CreateTestTableByPersonID(person.id);
-
-            // step follow
-            // 1. show window popup
-            // 2. map data from popup to PersonModel
-            // 3. create new table ---> AngleTable_person{id}_test{id}
-        }
-
-        private void DeleteTestUser(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OpenUserData(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void FrontDetect(object sender, RoutedEventArgs e)
         {
-
+            frontDraw = true;
+            frontButton.Background = blueColor;
+            sideButton.Background = redColor;
         }
 
         private void SideDetect(object sender, RoutedEventArgs e)
         {
+            frontDraw = false;
+            sideButton.Background = blueColor;
+            frontButton.Background = redColor;
+        }
+        
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
+        }
+
+        private void saveResultToDatabase(object sender, RoutedEventArgs e)
+        {
+            
+            statusText.Text = "Saving...";
+            saveButton.Background = redColor;
+            saveButton.Content = "Saving..";
+
+            //save angle
+            save = true;
+            if (angleList.Count < 1) { }
+            else
+            {
+                for (int i = 0; i < angleList.Count; i++)
+                {
+                    SqliteDataAccess.AddAngle(angleList[i], TestModelHome);
+                }
+            }
+
+            //save body
+            if (trackedBodies.Count() < 1) { }
+            else
+            {
+                string kinectBodyDataString = JsonConvert.SerializeObject(trackedBodies);
+                FileStream fParameter = new FileStream(folder_text, FileMode.Create, FileAccess.Write);
+                StreamWriter m_WriterParameter = new StreamWriter(fParameter);
+                m_WriterParameter.BaseStream.Seek(0, SeekOrigin.End);
+                m_WriterParameter.Write(kinectBodyDataString);
+                m_WriterParameter.Flush();
+                m_WriterParameter.Close();
+            }
+
+            statusText.Text = "Complete!";
+            saveButton.Content = "Save";
+            saveButton.Background = blueColor;
+
+            save = false;
+
+            //clear list
+            angleList.Clear();
+            trackedBodies.Clear();
 
         }
+
+        #endregion
     }
 }

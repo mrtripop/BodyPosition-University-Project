@@ -7,6 +7,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
+
                         <Grid HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
                               Background="{TemplateBinding Background}">
@@ -19,7 +20,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Background" Value="#2196F3" />
+            <Setter Property="Background" Value="White" />
             <Setter Property="BorderThickness" Value="0"/>
         </Style.Setters>
     </Style>

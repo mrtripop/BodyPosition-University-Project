@@ -1,26 +1,21 @@
 ﻿using BodyPosition.Core;
+using BodyPosition.MVVM.Model;
+using System;
 
 namespace BodyPosition.MVVM.ViewModel
 {
     class MainViewModel : ObservableObject
     {
-
-        public RelayCommand HomeViewCommand { get; set; }
-        public RelayCommand DatabaseViewCommand { get; set; }
-        public RelayCommand UserManagementViewCommand { get; set; }
-
-
-        public HomeViewModel HomeVM { get; set; }
-        public DatabaseViewModel DatabaseVM { get; set; }
-        public UserManagementViewModel UserManagementVM { get; set; }
+        public RelayCommand UserSelectionViewCommand { get; set; }
+        public UserSelectionViewModel UserSelectionVM { get; set; }
 
         private object _currentView;
 
         public object CurrentView
         {
             get { return _currentView; }
-            set 
-            { 
+            set
+            {
                 _currentView = value;
                 OnPropertyChanged();
             }
@@ -28,25 +23,13 @@ namespace BodyPosition.MVVM.ViewModel
 
         public MainViewModel()
         {
-            HomeVM = new HomeViewModel();
-            DatabaseVM = new DatabaseViewModel();
-            UserManagementVM = new UserManagementViewModel();
+            UserSelectionVM = new UserSelectionViewModel();
 
-            CurrentView = HomeVM;
+            CurrentView = UserSelectionVM;
 
-            HomeViewCommand = new RelayCommand(o =>
+            UserSelectionViewCommand = new RelayCommand(o =>
             {
-                CurrentView = HomeVM;
-            });
-
-            DatabaseViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = DatabaseVM;
-            });
-
-            UserManagementViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = UserManagementVM;
+                CurrentView = UserSelectionVM;
             });
         }
     }

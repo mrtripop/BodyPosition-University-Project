@@ -7,67 +7,18 @@
         xmlns:viewModel="clr-namespace:BodyPosition.MVVM.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="1080" Width="1920"
+        Loaded="Window_Loaded"
         WindowState="Maximized"
         Background="#152032">
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <viewModel:MainViewModel/>
-    </Window.DataContext>
-    
+    </Window.DataContext>-->
+
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-
-        <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <TextBlock Text="Body Position"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   FontSize="22"
-                   Foreground="White"
-                   FontWeight="Bold"/>
-
-        <StackPanel Grid.Row="1">
-            <RadioButton Content="Home"
-                         Height="50"
-                         Foreground="White"
-                         FontSize="14"
-                         Style="{StaticResource MenuButtonTheme}"
-                         IsChecked="True"
-                         Command="{Binding HomeViewCommand}"/>
-
-            <RadioButton Content="Database"
-                         Height="50"
-                         Foreground="White"
-                         FontSize="14"
-                         Style="{StaticResource MenuButtonTheme}"
-                         Command="{Binding DatabaseViewCommand}"/>
-
-            <RadioButton Content="User Management"
-                         Height="50"
-                         Foreground="White"
-                         FontSize="14"
-                         Style="{StaticResource MenuButtonTheme}"
-                         Command="{Binding UserManagementViewCommand}"/>
-        </StackPanel>
-
-        <TextBox Width="250"
-                   Height="40"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
-                   Margin="5"
-                   Grid.Column="1"
-                   Style="{StaticResource ModernTextBox}"/>
-
-        <ContentControl Grid.Row="1"
-                        Grid.Column="1"
-                        Margin="10"
-                        Content="{Binding CurrentView}"/>
-
+        <Frame Grid.Row="1" 
+               Name="frame" 
+               NavigationUIVisibility="Hidden"/>
+        
     </Grid>
 </Window>

@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace BodyPosition.MVVM.Model
 {
-    class TestModel
+    public class TestModel
     {
-        public int id { get; set; }
-        public int person_id { get; set; }
-        public override string ToString()
-        {
-            return "test id: "+this.id+", person id: "+this.person_id;
-        }
+        public int Id { get; set; }
+        public string TestName { get; set; }
+        public int Uid { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
+
     }
 }

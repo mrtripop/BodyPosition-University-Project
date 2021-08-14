@@ -56,28 +56,61 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accord, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.3.8.0\lib\net45\Accord.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Video, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Accord.Video.3.8.0\lib\net45\Accord.Video.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Video.FFMPEG.x64, Version=3.8.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=AMD64">
+      <HintPath>..\packages\Accord.Video.FFMPEG.x64.3.8.0\lib\net45\Accord.Video.FFMPEG.x64.dll</HintPath>
+    </Reference>
+    <Reference Include="AForge, Version=2.2.5.0, Culture=neutral, PublicKeyToken=c1db6ff4eaa06aeb, processorArchitecture=MSIL">
+      <HintPath>..\packages\AForge.2.2.5\lib\AForge.dll</HintPath>
+    </Reference>
+    <Reference Include="Coding4Fun.Kinect.Wpf, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Coding4Fun.Kinect.Wpf.1.7.0\lib\Coding4Fun.Kinect.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper, Version=1.38.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
     </Reference>
-    <Reference Include="LightBuzz.Vitruvius, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemby\LightBuzz.Vitruvius.dll</HintPath>
+    <Reference Include="Kinect.Toolbox, Version=1.3.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\KinectToolbox.1.3.0.0\lib\Kinect.Toolbox.dll</HintPath>
+    </Reference>
+    <Reference Include="Kinect.Toolbox.Voice, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KinectToolbox.1.3.0.0\lib\Kinect.Toolbox.Voice.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignColors, Version=1.2.7.1979, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.2.7\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
+    <Reference Include="MaterialDesignThemes.Wpf, Version=3.0.1.920, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignThemes.3.0.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Expression.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Coding4Fun.Kinect.Wpf.1.7.0\lib\Microsoft.Expression.Drawing.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Kinect.2.0.1410.19000\lib\net45\Microsoft.Kinect.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Kinect.Toolkit.FaceTracking, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\KinectToolbox.1.3.0.0\lib\Microsoft.Kinect.Toolkit.FaceTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Kinect.Tools, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <HintPath>..\packages\Microsoft.Kinect.Tools.x64.2.0.1410.19000\lib\net45\Microsoft.Kinect.Tools.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.114.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -86,33 +119,6 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="VisioForge.Controls, Version=11.3.20.0, Culture=neutral, PublicKeyToken=5873e863f1bcda5d, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Core.TRIAL.11.3.20\lib\net45\VisioForge.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="VisioForge.Controls.UI, Version=11.3.20.0, Culture=neutral, PublicKeyToken=eafa6bd21aa991fd, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Core.TRIAL.11.3.20\lib\net45\VisioForge.Controls.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="VisioForge.Controls.UI.Dialogs, Version=11.3.20.0, Culture=neutral, PublicKeyToken=3d84672df68c33ac, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Core.TRIAL.11.3.20\lib\net45\VisioForge.Controls.UI.Dialogs.dll</HintPath>
-    </Reference>
-    <Reference Include="VisioForge.DirectX, Version=2.6.3.0, Culture=neutral, PublicKeyToken=2f064561f42d5b6a, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Core.TRIAL.11.3.20\lib\net45\VisioForge.DirectX.dll</HintPath>
-    </Reference>
-    <Reference Include="VisioForge.Kinect2, Version=11.3.20.0, Culture=neutral, PublicKeyToken=f82f0d08b3f31343, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Kinect2.TRIAL.11.3.20\lib\net45\VisioForge.Kinect2.dll</HintPath>
-    </Reference>
-    <Reference Include="VisioForge.MediaFramework, Version=11.3.20.0, Culture=neutral, PublicKeyToken=14e66dd726c53f11, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Core.TRIAL.11.3.20\lib\net45\VisioForge.MediaFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="VisioForge.Shared, Version=11.3.20.0, Culture=neutral, PublicKeyToken=4cb7f6778cad43a2, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Core.TRIAL.11.3.20\lib\net45\VisioForge.Shared.dll</HintPath>
-    </Reference>
-    <Reference Include="VisioForge.Tools, Version=11.3.20.0, Culture=neutral, PublicKeyToken=33c6ded9724deec2, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Core.TRIAL.11.3.20\lib\net45\VisioForge.Tools.dll</HintPath>
-    </Reference>
-    <Reference Include="VisioForge.Types, Version=11.3.20.0, Culture=neutral, PublicKeyToken=722de1c1c0a7f49e, processorArchitecture=MSIL">
-      <HintPath>..\packages\VisioForge.DotNet.Core.TRIAL.11.3.20\lib\net45\VisioForge.Types.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -131,6 +137,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Core\KinectManager.cs" />
+    <Compile Include="Core\LogConsole.cs" />
     <Compile Include="Core\ObservableObject.cs" />
     <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="Core\SqliteDataAccess.cs" />
@@ -138,10 +146,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MVVM\View\CustomListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MVVM\View\DatabaseView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -150,7 +154,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MVVM\View\UserManagementView.xaml">
+    <Page Include="MVVM\View\RegisterPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MVVM\View\TestSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,24 +181,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MVVM\Model\AngleModel.cs" />
-    <Compile Include="MVVM\Model\PersonModel.cs" />
     <Compile Include="MVVM\Model\TestModel.cs" />
-    <Compile Include="MVVM\ViewModel\CustomListViewModel.cs" />
+    <Compile Include="MVVM\Model\UserModel.cs" />
     <Compile Include="MVVM\ViewModel\DatabaseViewModel.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
-    <Compile Include="MVVM\ViewModel\UserManagementViewModel.cs" />
-    <Compile Include="MVVM\View\CustomListView.xaml.cs">
-      <DependentUpon>CustomListView.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="MVVM\ViewModel\SelectionViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\UserSelectionViewModel.cs" />
     <Compile Include="MVVM\View\DatabaseView.xaml.cs">
       <DependentUpon>DatabaseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\View\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MVVM\View\UserManagementView.xaml.cs">
-      <DependentUpon>UserManagementView.xaml</DependentUpon>
+    <Compile Include="MVVM\View\RegisterPage.xaml.cs">
+      <DependentUpon>RegisterPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\View\TestSelectionView.xaml.cs">
+      <DependentUpon>TestSelectionView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MVVM\View\UserSelectionView.xaml.cs">
       <DependentUpon>UserSelectionView.xaml</DependentUpon>
@@ -224,7 +232,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assemby\LightBuzz.Vitruvius.dll" />
+    <Content Include="FaceTrackData.dll" />
+    <Content Include="FaceTrackLib.dll" />
     <Resource Include="Assemby\LightBuzz.Vitruvius.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Vitruvius-master\Kinect v2\WPF\LightBuzz.Vitruvius\LightBuzz.Vitruvius.csproj">
+      <Project>{89e39683-d56d-4604-971b-587c22c62934}</Project>
+      <Name>LightBuzz.Vitruvius</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\build\net45\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\build\net45\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
@@ -233,11 +249,15 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\build\net45\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.114.0\build\net45\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
-    <Error Condition="!Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets'))" />
+    <Error Condition="!Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets'))" />
+    <Error Condition="!Exists('..\packages\Accord.3.8.0\build\Accord.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Accord.3.8.0\build\Accord.targets'))" />
+    <Error Condition="!Exists('..\packages\Accord.Video.FFMPEG.x64.3.8.0\build\Accord.Video.FFMPEG.x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Accord.Video.FFMPEG.x64.3.8.0\build\Accord.Video.FFMPEG.x64.targets'))" />
   </Target>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.4.1.0\build\MaterialDesignThemes.targets')" />
+  <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />
+  <Import Project="..\packages\Accord.3.8.0\build\Accord.targets" Condition="Exists('..\packages\Accord.3.8.0\build\Accord.targets')" />
+  <Import Project="..\packages\Accord.Video.FFMPEG.x64.3.8.0\build\Accord.Video.FFMPEG.x64.targets" Condition="Exists('..\packages\Accord.Video.FFMPEG.x64.3.8.0\build\Accord.Video.FFMPEG.x64.targets')" />
 </Project>

@@ -9,5 +9,8 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assemby/lightbuzz.vitruvius.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("facetrackdata.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("facetracklib.dll")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("accord.dll.config")]
 
 

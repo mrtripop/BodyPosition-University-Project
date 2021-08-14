@@ -3,93 +3,120 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:BodyPosition"
+      xmlns:local="clr-namespace:BodyPosition.MVVM.View"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="1080" d:DesignWidth="1920"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       Title="MainPage">
 
-    <StackPanel Background="Beige" >
-        <Grid Height="100">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="20 0">
-                <Label Width="150"  Height="50" 
-                       Background="{x:Null}" Foreground="#FF2196F3"
-                       Content="Search List"
-                       BorderBrush="{x:Null}"  
-                       HorizontalContentAlignment="Center" 
-                       HorizontalAlignment="Stretch" 
-                       VerticalContentAlignment="Center" 
-                       FontSize="20" />
-                
-                <TextBox x:Name="SearchTextBox" 
-                         Width="100" 
-                         Height="25" 
-                         Background="{x:Null}" 
-                         BorderBrush="{x:Null}" 
-                         Foreground="Black" />
-                
-                <Button Width="55" Height="50" 
-                        Content="GO!"
-                        Background="{x:Null}" 
-                        BorderBrush="{x:Null}"
-                        Foreground="#FF2196F3" Click="Button_Click" />
-            </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Center">
-                <Label Width="150"  Height="50" 
-                       Content="HOME" 
-                       FontSize="30" FontWeight="Bold" FontStyle="Normal"
-                       Background="{x:Null}" Foreground="#FFFF5B0D"
-                       BorderBrush="{x:Null}"   HorizontalAlignment="Stretch" 
-                       HorizontalContentAlignment="Center" FontStretch="Normal" 
-                       VerticalContentAlignment="Center" />
-            </StackPanel>
-            
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Right">
-                <Button Width="150" Height="50" Content="ADD LIST"
-                        Background="{x:Null}" BorderBrush="{x:Null}"
-                        Foreground="#FF2196F3" Click="Button_Click_1" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-            </StackPanel>
+        <Grid>
+            <TextBlock Text="Body Position"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   FontSize="64"
+                   Foreground="White"
+                   FontWeight="Bold"
+                   Grid.Row="0"/>
         </Grid>
-        <DataGrid x:Name="dgUsers" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <!--<Button Name="B1" 
-                                    Content="Select" 
-                                    Click=""/>-->
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}"/>
-                <DataGridTextColumn Header="LastName" Binding="{Binding LastName}"/>
-                <DataGridTextColumn Header="Gender" Binding="{Binding Gender}"/>
-                <DataGridTextColumn Header="Tel" Binding="{Binding Tel}"/>
-                <DataGridTextColumn Header="Weight" Binding="{Binding Weight}"/>
-                <DataGridTextColumn Header="Height" Binding="{Binding Height}"/>
-                <DataGridTextColumn Header="Dates" Binding="{Binding Dates}"/>
-                <DataGridTextColumn Header="Times" Binding="{Binding Times}"/>
-                <!--<DataGridTextColumn Header="Name" Binding="{Binding Name}"/>
-                <DataGridTemplateColumn Header="Smoker">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding Smoker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Birthday">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <DatePicker SelectedDate="{Binding Birthday}" BorderThickness="0"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
-            </DataGrid.Columns>
 
-        </DataGrid>
-    </StackPanel>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    Margin="50"
+                    Width="1200">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal"
+                            Margin="50,0,0,0">
+
+                        <Button Width="70"
+                                    Height="40"
+                                    Style="{StaticResource ButtonTheme}"
+                                    Click="AddUser" Margin="0,5,0,0" VerticalAlignment="Top">
+                            เพิ่ม
+                        </Button>
+
+                    </StackPanel>
+                </StackPanel>
+                <TextBlock FontSize="30" 
+                           Grid.Column="1" 
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Foreground="White">
+                    รายชื่อผู้เข้าทดสอบ
+                </TextBlock>
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Right"
+                            Grid.Column="2">
+                    <StackPanel Orientation="Horizontal"
+                            Margin="0,0,50,0">
+
+                        <TextBox Width="200"
+                                 Height="40"
+                                 Background="Black"
+                                 Foreground="White"
+                                 BorderBrush="White"
+                                 VerticalAlignment="Center"
+                                 Margin="5"
+                                 x:Name="searchTextBox"/>
+
+                        <Button Width="70"
+                                Height="40"
+                                Click="Search" >
+                            ค้นหา
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+
+            <DataGrid x:Name="dgUsers" AutoGenerateColumns="False" 
+                      Margin="50,20,50,0"
+                      RowBackground="Black">
+
+                <DataGrid.Columns>
+
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="SelectButton" Content="Select" Click="Selected"
+                                        Margin="0,0,10,0"
+                                        Width="70"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="70"/>
+                    <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" Width="150"/>
+                    <DataGridTextColumn Header="LastName" Binding="{Binding LastName}" Width="130"/>
+                    <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" Width="100"/>
+                    <DataGridTextColumn Header="Phone" Binding="{Binding Tel}" Width="110"/>
+                    <DataGridTextColumn Header="Weight" Binding="{Binding Weight}" Width="80"/>
+                    <DataGridTextColumn Header="Height" Binding="{Binding Height}" Width="70"/>
+                    <DataGridTextColumn Header="Dates" Binding="{Binding Date}" Width="80"/>
+                    <DataGridTextColumn Header="Times" Binding="{Binding Time}" Width="80"/>
+
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="DeleteButton" Content="Delete" Click="Delete"
+                                        Width="80"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+    </Grid>
 </Page>

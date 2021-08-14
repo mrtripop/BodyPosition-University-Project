@@ -1,68 +1,99 @@
-﻿using BodyPosition.MVVM.ViewModel;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using Excel = Microsoft.Office.Interop.Excel;
-using System.Reflection;
 using System;
 using System.Data.SQLite;
 using LightBuzz.Vitruvius;
-using Microsoft.Kinect;
-using System.Windows.Media;
+using BodyPosition.MVVM.Model;
 
 namespace BodyPosition.MVVM.View
 {
     /// <summary>
     /// Interaction logic for DatabaseView.xaml
     /// </summary>
-    public partial class DatabaseView : UserControl
+    public partial class DatabaseView : Window
     {
- 
-        readonly string FOLDER_PATH = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "video");
+        #region Parameter
+        private UserModel _user;
+        public UserModel User
+        {
+            get { return _user; }
+            set { _user = value; }
+        }
 
-        VitruviusPlayer _player;
+        private TestModel _test;
+        public TestModel Test
+        {
+            get { return _test; }
+            set { _test = value; }
+        }
 
-        public DatabaseView()
+        #endregion
+
+        #region Initialize
+        public DatabaseView(UserModel user, TestModel test)
         {
             InitializeComponent();
-            //DataContext = new SelectViewModel();
+
+            User = user;
+            Test = test;
+
+            userUID.Text = User.ID.ToString();
+            userName.Text = User.FirstName + " " + User.LastName;
+            testName.Text = Test.TestName;
         }
 
-        private void OpenUserDataTest(object sender, RoutedEventArgs e)
-        {
+        #endregion
 
-        }
-
+        #region Record and Play video
         private void playPauseVideo(object sender, RoutedEventArgs e)
         {
-            _player = new VitruviusPlayer();
 
-            if (_player.IsPlaying)
-            {
-                _player.FrameArrived -= Player_FrameArrived;
-                _player.Stop();
-            }
-            else
-            {
-                _player.Folder = FOLDER_PATH;
-                _player.FrameArrived += Player_FrameArrived;
-                _player.Start();
-            }
         }
 
-        private void Player_FrameArrived(object sender, VitruviusFrame frame)
+        private void OpenRecording()
         {
-            if (frame != null)
+            var ofd = new Microsoft.Win32.OpenFileDialog();
+            ofd.Filter = "Kinect Eventstream|*.xef|All files|*.*";
+            ofd.Title = "Open a recording";
+
+            if (ofd.ShowDialog() == true)
             {
-                viewer.Image = frame.Image.ToBitmap(frame.Visualization, PixelFormats.Bgr32);
-                viewer.DrawBody(frame.Body);
+                KinectManager.Instance.RecordingStopped += RecordingStopped;
+                KinectManager.Instance.OpenRecording(ofd.FileName);
+
+                //if (!IsRunning) IsRunning = true;
+            }
+        }
+        private void RecordingStopped()
+        {
+            IsRunning = false;
+        }
+
+        private bool isRunning = false;
+        public bool IsRunning
+        {
+            get
+            {
+                return isRunning;
+            }
+
+            set
+            {
+                isRunning = value;
             }
         }
 
+        #endregion
+
+        #region Open data table
         private void openTable(object sender, RoutedEventArgs e)
         {
 
         }
 
+        #endregion
+
+        #region Export to Excel
         private void exportTable(object sender, RoutedEventArgs e)
         {
             Excel.Application xlApp;
@@ -81,22 +112,21 @@ namespace BodyPosition.MVVM.View
             int j = 0;
 
             xlWorkSheet.Cells[1, 1] = "ID";
-            xlWorkSheet.Cells[1, 2] = "Name";
-            xlWorkSheet.Cells[1, 3] = "Gender";
-            xlWorkSheet.Cells[1, 4] = "Phone";
-            xlWorkSheet.Cells[1, 5] = "Weight";
-            xlWorkSheet.Cells[1, 6] = "Height";
-            xlWorkSheet.Cells[1, 7] = "Date";
+            xlWorkSheet.Cells[1, 2] = "Time";
+            xlWorkSheet.Cells[1, 3] = "Front Pelvis Angle";
+            xlWorkSheet.Cells[1, 4] = "Right Shoulder";
+            xlWorkSheet.Cells[1, 5] = "Left Shoulder";
+            xlWorkSheet.Cells[1, 6] = "Pelvis Angle";
+            xlWorkSheet.Cells[1, 7] = "Knee Angle";
+            xlWorkSheet.Cells[1, 8] = "Ankle Angle";
 
-            // เปลี่ยนชื่อไฟล์เป็นชื่อตารางการทดลองแต่ละครั้ง
-            string fileName = "sqliteToExcel.xls";
+            string fileName = Test.TestName+".xls";
 
             using (SQLiteConnection con = new SQLiteConnection(cs))
             {
                 con.Open();
 
-                // เปลี่ยน Person เป็นตารางการทดลองแต่ละครั้ง
-                string stm = "SELECT * FROM Person";
+                string stm = "SELECT * FROM "+Test.TestName;
 
                 using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
                 {
@@ -115,7 +145,6 @@ namespace BodyPosition.MVVM.View
                 }
                 con.Close();
             }
-
             xlWorkBook.SaveAs(fileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             xlWorkBook.Close(true, misValue, misValue);
             xlApp.Quit();
@@ -134,6 +163,7 @@ namespace BodyPosition.MVVM.View
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.ToString());
                 obj = null;
             }
             finally
@@ -141,7 +171,6 @@ namespace BodyPosition.MVVM.View
                 GC.Collect();
             }
         }
-
-        
+        #endregion
     }
 }
