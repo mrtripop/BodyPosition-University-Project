@@ -97,7 +97,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="70"/>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="70"/>
                     <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" Width="150"/>
                     <DataGridTextColumn Header="LastName" Binding="{Binding LastName}" Width="130"/>
                     <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" Width="100"/>

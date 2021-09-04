@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\Debug\
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\Debug\
 BodyPosition
 none
 false
 DEBUG;TRACE
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\App.xaml
-5-1922405458
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\App.xaml
+91764623721
+4568824161
+29-1177015164
+901546143718
+MainWindow.xaml;MVVM\View\DatabaseView.xaml;MVVM\View\HomeView.xaml;MVVM\View\RegisterPage.xaml;MVVM\View\TestSelectionView.xaml;MVVM\View\UserSelectionView.xaml;Theme\ButtonTheme.xaml;Theme\MenuButtonTheme.xaml;Theme\TextBoxTheme.xaml;
 
-12-774838140
-141954944928
-MainWindow.xaml;MVVM\View\DatabaseView.xaml;MVVM\View\HomeView.xaml;Theme\MenuButtonTheme.xaml;Theme\TextBoxTheme.xaml;
-
-False
+True
 

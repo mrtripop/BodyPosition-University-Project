@@ -1,7 +1,11 @@
-﻿using Microsoft.Kinect;
+﻿using BodyPosition.Core;
+using BodyPosition.MVVM.Model;
+using BodyPosition.MVVM.Model.AngleModel;
+using Microsoft.Kinect;
 using Microsoft.Kinect.Tools;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -38,6 +42,9 @@ namespace BodyPosition
         #endregion
 
         #region Events
+        public KStudioRecordingState saveState;
+        public event EventHandler<EventArgs> RecordingStateChanged;
+
 
         public event EventHandler<bool> KinectAvailabilityChanged;
         private void OnKinectAvailabilityChanged(object sender, IsAvailableChangedEventArgs e)
@@ -130,11 +137,8 @@ namespace BodyPosition
                 return instance;
             }
         }
-
         public CoordinateMapper CoordinateMapper => _sensor.CoordinateMapper;
-
         public bool Paused { get; private set; } = false;
-
         private KinectManager()
         {
             InitializeKinect();
@@ -181,17 +185,25 @@ namespace BodyPosition
             return _audioReader.AcquireLatestBeamFrames();
         }
 
-        /// <summary>
-        /// Set up a custom multi source reader who is serving the given frameSourceTypes.
-        /// 
-        /// </summary>
-        /// <param name="frameSourceTypes">FrameSourceTypes to deliver.</param>
         public void SetUpCustomMultiSourceReader(FrameSourceTypes frameSourceTypes)
         {
             _customMultireader = _sensor.OpenMultiSourceFrameReader(frameSourceTypes);
             _customMultireader.MultiSourceFrameArrived += OnCustomMultiSourceFrameArrived;
         }
 
+        public void PauseKinect(bool bPause = true)
+        {
+            _multireader.IsPaused = bPause;
+            _colordepthReader.IsPaused = bPause;
+            _colorReader.IsPaused = bPause;
+            _audioReader.IsPaused = bPause;
+
+            Paused = bPause;
+        }
+
+        #endregion
+
+        #region record
         public void StartRecording(string filePath)
         {
             client = KStudio.CreateClient();
@@ -200,16 +212,24 @@ namespace BodyPosition
 
             KStudioEventStreamSelectorCollection streamCollection = new KStudioEventStreamSelectorCollection();
             streamCollection.Add(KStudioEventStreamDataTypeIds.UncompressedColor);
-            streamCollection.Add(KStudioEventStreamDataTypeIds.Depth);
             streamCollection.Add(KStudioEventStreamDataTypeIds.Body);
+            streamCollection.Add(KStudioEventStreamDataTypeIds.Depth);
             // The enum value for Audio is missing. The GUID below was taken from Kinect Studio.
             var Audio = new Guid(0x787c7abd, 0x9f6e, 0x4a85, 0x8d, 0x67, 0x63, 0x65, 0xff, 0x80, 0xcc, 0x69);
             streamCollection.Add(Audio);
 
             recording = client.CreateRecording(filePath, streamCollection, KStudioRecordingFlags.IgnoreOptionalStreams);
+            recording.StateChanged += OnRecordingStateChanged;
             recording.Start();
+            
+        }
 
-            LogConsole.WriteLine("File opened and recording ...");
+        private void OnRecordingStateChanged(object sender, EventArgs e)
+        {
+            saveState = recording.State;
+            Console.WriteLine(saveState);
+
+            RecordingStateChanged?.Invoke(sender, e);
         }
 
         public void StopRecording()
@@ -226,9 +246,11 @@ namespace BodyPosition
                 client.Dispose();
                 client = null;
             }
-
-            LogConsole.WriteLine("Recording stopped");
         }
+
+        #endregion
+
+        #region playback
 
         public void OpenRecording(string filePath)
         {
@@ -239,6 +261,7 @@ namespace BodyPosition
             KStudioEventStreamSelectorCollection streamCollection = new KStudioEventStreamSelectorCollection();
             streamCollection.Add(KStudioEventStreamDataTypeIds.UncompressedColor);
             streamCollection.Add(KStudioEventStreamDataTypeIds.Depth);
+            streamCollection.Add(KStudioEventStreamDataTypeIds.Body);
             Guid Audio = new Guid(0x787c7abd, 0x9f6e, 0x4a85, 0x8d, 0x67, 0x63, 0x65, 0xff, 0x80, 0xcc, 0x69);
             streamCollection.Add(Audio);
 
@@ -248,9 +271,8 @@ namespace BodyPosition
 
             OnKinectAvailabilityChanged(this, true);
 
-            LogConsole.WriteLine("Recording opened and playing ...");
+            Console.WriteLine("Recording opened and playing ...");
         }
-
         public void CloseRecording()
         {
             OnRecordingStopped();
@@ -268,12 +290,11 @@ namespace BodyPosition
                 client = null;
             }
 
-            LogConsole.WriteLine("Recording stopped");
+            Console.WriteLine("Recording stopped");
         }
-
         private void KStudioClient_Playback_StateChanged(object sender, EventArgs e)
         {
-            LogConsole.WriteLine("Playback state: {0}", playback.State.ToString());
+            Console.WriteLine("Playback state: {0}", playback.State.ToString());
 
             if (playback.State == KStudioPlaybackState.Stopped)
             {
@@ -281,16 +302,9 @@ namespace BodyPosition
             }
         }
 
-        public void PauseKinect(bool bPause = true)
-        {
-            _multireader.IsPaused = bPause;
-            _colordepthReader.IsPaused = bPause;
-            _colorReader.IsPaused = bPause;
-            _audioReader.IsPaused = bPause;
+        #endregion
 
-            Paused = bPause;
-        }
-
+        #region buffer & ToBitmap
         public byte[] ToByteBuffer(ColorFrame frame)
         {
             int width = frame.FrameDescription.Width;
@@ -341,6 +355,7 @@ namespace BodyPosition
             }
             catch (Exception e)
             {
+                MessageBox.Show(e.ToString());
                 return null;
             }
         }
@@ -432,5 +447,7 @@ namespace BodyPosition
         }
 
         #endregion
+
+        
     }
 }

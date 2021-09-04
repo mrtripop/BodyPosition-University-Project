@@ -1,0 +1,14 @@
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\BodyPosition.csproj.AssemblyReference.cache
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\Theme\ButtonTheme.baml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\Theme\MenuButtonTheme.baml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\Theme\TextBoxTheme.baml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\MainWindow.g.cs
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\MVVM\View\DatabaseView.g.cs
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\MVVM\View\HomeView.g.cs
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\MVVM\View\RegisterPage.g.cs
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\MVVM\View\TestSelectionView.g.cs
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\MVVM\View\UserSelectionView.g.cs
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\App.g.cs
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\BodyPosition_Content.g.cs
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\BodyPosition_MarkupCompile.cache
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Release\BodyPosition_MarkupCompile.lref

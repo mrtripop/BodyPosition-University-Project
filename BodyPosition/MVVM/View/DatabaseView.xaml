@@ -7,297 +7,168 @@
         xmlns:controls="clr-namespace:LightBuzz.Vitruvius.Controls;assembly=LightBuzz.Vitruvius"      
         mc:Ignorable="d" 
         d:DesignHeight="1080" d:DesignWidth="1920"
-        Background="#000000">
+        Background="#152032">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="150"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0">
-
-            <TextBlock Text="Body Position"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   FontSize="64"
-                   Foreground="White"
-                   FontWeight="Bold"
-                   Grid.Row="0"/>
-        </Grid>
+    <Grid VerticalAlignment="Center">
 
         <StackPanel Grid.Row="1">
-
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="900"/>
+                    <RowDefinition Height="150"></RowDefinition>
+                    <RowDefinition Height="750"></RowDefinition>
+                    <RowDefinition Height="150"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Border Background="#000000"
-                        Grid.Row="0" 
-                        Grid.Column="0">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
 
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="700"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
+                        <TextBox Width="300"
+                                 Height="70"
+                                 Background="White"
+                                 Foreground="Black"
+                                 BorderBrush="Black"
+                                 VerticalAlignment="Center"
+                                 Margin="5,0,0,0"
+                                 FontSize="16"
+                                 x:Name="searchTextBlock"/>
 
-
-
-                        <StackPanel Grid.Row="1" 
-                                    Height="50" 
-                                    Orientation="Horizontal"
-                                    Margin="10"
-                                    VerticalAlignment="Center"
-                                    HorizontalAlignment="Center">
-                            <TextBlock Foreground="White"
-                                       Height="20"
-                                       FontSize="16">UID:</TextBlock>
-
-                            <TextBlock Foreground="Black"
-                                       Background="White"
-                                       x:Name="userUID"
-                                       Width="100"
-                                       Height="30"
-                                       HorizontalAlignment="Center"
-                                       FontSize="16"
-                                       Margin="5,0,0,0"></TextBlock>
-
-                            <TextBlock Foreground="White"
-                                       Height="30" 
-                                       Margin="20,0,0,0"
-                                       FontSize="16">NAME:</TextBlock>
-
-                            <TextBlock Foreground="Black"
-                                       Background="White"
-                                       x:Name="userName"
-                                       Width="300"
-                                       Height="30"
-                                       Margin="5,0,0,0"
-                                       HorizontalAlignment="Center"
-                                       FontSize="16"></TextBlock>
-
-                            <TextBlock Foreground="White"
-                                       Height="20" Margin="20,0,0,0"
-                                       FontSize="16">TEST:</TextBlock>
-
-                            <TextBlock Foreground="Black"
-                                       Background="White"
-                                       x:Name="testName"
-                                       Width="300"
-                                       Height="30"
-                                       Margin="5,0,0,0"
-                                       HorizontalAlignment="Center"
-                                       FontSize="16"></TextBlock>
-                        </StackPanel>
-                        
-
-                    </Grid>
-                </Border>
-
-                <StackPanel Orientation="Horizontal"
-                            Margin="15,0,0,0" 
-                            Grid.Row="0" Grid.Column="1">
-
-                    <StackPanel>
-                        <TextBlock Text="ค่าพารามิเตอร์"
-                           Foreground="White"
-                           FontSize="24"
-                           HorizontalAlignment="Center"
-                           Margin="20,0,0,20"/>
-
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="465"/>
-                            </Grid.ColumnDefinitions>
-
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="340"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-
-                            <Grid Margin="0,15,0,0" Grid.Row="0">
-
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="250"/>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <StackPanel Grid.Column="0" Orientation="Vertical">
-                                    <StackPanel.Resources>
-                                        <Style TargetType="{x:Type TextBlock}">
-                                            <Setter Property="Margin" Value="80,13,0,13"/>
-                                        </Style>
-                                    </StackPanel.Resources>
-
-                                    <TextBlock Text="Pelvis Front"
-                                               Foreground="White"
-                                               FontSize="18"
-                                               HorizontalAlignment="Left"/>
-
-                                    <TextBlock Text="Shoulder Right"
-                                               Foreground="White"
-                                               FontSize="18"
-                                               HorizontalAlignment="Left"/>
-
-                                    <TextBlock Text="Shoulder Left"
-                                               Foreground="White"
-                                               FontSize="18"
-                                               HorizontalAlignment="Left"/>
-
-                                    <TextBlock Text="Pelvis Side Angle"
-                                               Foreground="White"
-                                               FontSize="18"
-                                               HorizontalAlignment="Left"/>
-
-                                    <TextBlock Text="Knee Angle"
-                                               Foreground="White"
-                                               FontSize="18"
-                                               HorizontalAlignment="Left"/>
-
-                                    <TextBlock Text="Ankle Angle"
-                                               Foreground="White"
-                                               FontSize="18"
-                                               HorizontalAlignment="Left"/>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="1" 
-                                    Orientation="Vertical" 
-                                    HorizontalAlignment="Left" 
-                                    Margin="10,0,0,0">
-                                    <StackPanel.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="Margin" Value="0,14,0,0"/>
-                                            <Setter Property="Height" Value="38"/>
-                                            <Setter Property="Width" Value="125"/>
-                                        </Style>
-                                    </StackPanel.Resources>
-
-                                    <Border Margin="0,0">
-                                        <Border.Background>
-                                            <SolidColorBrush Color="White" Opacity="0.7" />
-                                        </Border.Background>
-                                        <TextBlock TextAlignment="Center" 
-                                           HorizontalAlignment="Center" 
-                                           VerticalAlignment="Center"><Run x:Name="tblPelvisFront" Text="" /><Run Text="°"/></TextBlock>
-                                    </Border>
-
-                                    <Border >
-                                        <Border.Background>
-                                            <SolidColorBrush Color="White" Opacity="0.7" />
-                                        </Border.Background>
-                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblShoulderRight" Text="" /><Run Text=" m"/></TextBlock>
-                                    </Border>
-
-                                    <Border >
-                                        <Border.Background>
-                                            <SolidColorBrush Color="White" Opacity="0.7" />
-                                        </Border.Background>
-                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblShoulderLeft" Text="" /><Run Text=" m"/></TextBlock>
-                                    </Border>
-
-                                    <Border >
-                                        <Border.Background>
-                                            <SolidColorBrush Color="White" Opacity="0.7" />
-                                        </Border.Background>
-                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblPelvisSideAngle" Text="" /><Run Text="°"/></TextBlock>
-                                    </Border>
-
-                                    <Border >
-                                        <Border.Background>
-                                            <SolidColorBrush Color="White" Opacity="0.7" />
-                                        </Border.Background>
-                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblKneeAngle" Text="" /><Run Text="°"/></TextBlock>
-                                    </Border>
-
-                                    <Border >
-                                        <Border.Background>
-                                            <SolidColorBrush Color="White" Opacity="0.7" />
-                                        </Border.Background>
-                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblAnkleAngle" Text="" /><Run Text="°"/></TextBlock>
-                                    </Border>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-
-                        <TextBlock Margin="0,20,0,10" Foreground="White"
-                                   HorizontalAlignment="Center"
-                                   FontSize="24"><Run Text="ปุ่มควบคุมการทำงาน"/></TextBlock>
-
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
-                                <RowDefinition Height="100"/>
-                                <RowDefinition Height="80"/>
-                            </Grid.RowDefinitions>
-
-                            <StackPanel Grid.Row="0"
-                                        Orientation="Horizontal"
-                                        HorizontalAlignment="Center">
-
-                                <TextBlock Foreground="Black"
-                                       Background="White"
-                                       x:Name="searchTextBlock"
-                                       Width="200"
-                                       Height="60"
-                                       Margin="5,0,0,0"
-                                       HorizontalAlignment="Center"
-                                           Text="search"
-                                       FontSize="16"></TextBlock>
-
-                                <Button x:Name="searchButton" 
-                                    Width="90" Height="60" Margin="10,5,10,5"
-                                    Click="playPauseVideo" 
+                        <Button x:Name="searchButton" 
+                                    Width="150" Height="70" Margin="10,5,10,5"
+                                    Click="SearchData" 
                                     Content="Search"
                                     FontSize="18"
                                     Foreground="White"
                                     Grid.Row="1"/>
+                    </StackPanel>
 
-                            </StackPanel>
+                    <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Margin" Value="75,10,0,13"/>
+                                </Style>
+                            </StackPanel.Resources>
 
-                            <Button x:Name="playButton" 
-                                    Width="300" Height="70" Margin="10,5,10,5"
-                                    Click="playPauseVideo" 
-                                    Content="Play"
-                                    FontSize="18"
-                                    Foreground="White"
-                                    Grid.Row="1"/>
+                            <TextBlock Text="Pelvis Front"
+                                       Margin="75,13,0,13"
+                                               Foreground="White"
+                                               FontSize="18"
+                                               HorizontalAlignment="Left"/>
 
-                            <StackPanel Orientation="Horizontal" 
-                                        Grid.Row="2"
-                                        HorizontalAlignment="Center"
-                                        Width="300">
-                                <Button x:Name="tableButton" 
-                                    Grid.Row="1"
-                                    Width="140" Height="70" Margin="0,0,0,0"
+                            <TextBlock Text="Shoulder Right"
+                                               Foreground="White"
+                                               FontSize="18"
+                                               HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="Shoulder Left"
+                                               Foreground="White"
+                                               FontSize="18"
+                                               HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="Pelvis Side Angle"
+                                               Foreground="White"
+                                               FontSize="18"
+                                               HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="Knee Angle"
+                                               Foreground="White"
+                                               FontSize="18"
+                                               HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="Ankle Angle"
+                                               Foreground="White"
+                                               FontSize="18"
+                                               HorizontalAlignment="Left"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" 
+                                    Orientation="Horizontal" 
+                                    HorizontalAlignment="Left" 
+                                    Margin="10,0,0,0">
+                            <StackPanel.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="Height" Value="38"/>
+                                    <Setter Property="Width" Value="125"/>
+                                </Style>
+                            </StackPanel.Resources>
+
+                            <Border Margin="50,0,0,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.7" />
+                                </Border.Background>
+                                <TextBlock TextAlignment="Center" 
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center"><Run x:Name="tblPelvisFront" Text="" /><Run Text="°"/></TextBlock>
+                            </Border>
+
+                            <Border Margin="60,0,0,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.7" />
+                                </Border.Background>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblShoulderRight" Text="" /><Run Text=" m"/></TextBlock>
+                            </Border>
+
+                            <Border Margin="60,0,0,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.7" />
+                                </Border.Background>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblShoulderLeft" Text="" /><Run Text=" m"/></TextBlock>
+                            </Border>
+
+                            <Border Margin="60,0,0,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.7" />
+                                </Border.Background>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblPelvisSideAngle" Text="" /><Run Text="°"/></TextBlock>
+                            </Border>
+
+                            <Border Margin="60,0,0,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.7" />
+                                </Border.Background>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblKneeAngle" Text="" /><Run Text="°"/></TextBlock>
+                            </Border>
+
+                            <Border Margin="60,0,0,0">
+                                <Border.Background>
+                                    <SolidColorBrush Color="White" Opacity="0.7" />
+                                </Border.Background>
+                                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"><Run x:Name="tblAnkleAngle" Text="" /><Run Text="°"/></TextBlock>
+                            </Border>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <DataGrid x:Name="DGAngle" AutoGenerateColumns="False" Grid.Row="1"
+                          Margin="100,20,100,0" RowBackground="White"
+                          BorderThickness="4" Background="Gray" Opacity="0.8" Foreground="Black">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Event Index" Binding="{Binding Id}" Width="200" />
+                        <DataGridTextColumn Header="Front Pelvis(Degree)" Binding="{Binding FrontPelvis}" Width="200" />
+                        <DataGridTextColumn Header="Right Shoulder(Meter)" Binding="{Binding RightShoulder}" Width="200" />
+                        <DataGridTextColumn Header="Left Shoulder(Meter)" Binding="{Binding LeftShoulder}" Width="200" />
+                        <DataGridTextColumn Header="Angle Pelvis(Degree)" Binding="{Binding Pelvis}" Width="200" />
+                        <DataGridTextColumn Header="Angle Knee(Degree)" Binding="{Binding Knee}" Width="200" />
+                        <DataGridTextColumn Header="Angle Ankle(Degree)" Binding="{Binding Ankle}" Width="200" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <StackPanel Grid.Row="2" VerticalAlignment="Center">
+                    <Button x:Name="exportButton" 
+                                    Width="250" Height="100"
                                     Foreground="White" 
-                                    FontSize="18"
-                                    Click="openTable" 
-                                    Content="Table"/>
-
-                            <Button x:Name="exportButton" 
-                                    Width="140" Height="70" Margin="20,5,10,5"
-                                    Foreground="White" 
-                                    FontSize="18"
+                                    FontSize="26"
                                     Click="exportTable" 
                                     Content="Export"
                                     Grid.Row="2"/>
-                            </StackPanel>
-                            
-
-                        </Grid>
-                    </StackPanel>
                 </StackPanel>
+                
             </Grid>
+
+            <StackPanel Orientation="Horizontal"
+                            Margin="15,0,0,0" 
+                            Grid.Column="1">
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>

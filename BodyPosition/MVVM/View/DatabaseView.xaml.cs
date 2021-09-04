@@ -1,9 +1,12 @@
 ﻿using System.Windows;
 using Excel = Microsoft.Office.Interop.Excel;
 using System;
-using System.Data.SQLite;
-using LightBuzz.Vitruvius;
-using BodyPosition.MVVM.Model;
+using System.Collections.Generic;
+using BodyPosition.MVVM.Model.UserModel;
+using BodyPosition.MVVM.Model.TestModel;
+using BodyPosition.MVVM.Model.AngleModel;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace BodyPosition.MVVM.View
 {
@@ -13,19 +16,32 @@ namespace BodyPosition.MVVM.View
     public partial class DatabaseView : Window
     {
         #region Parameter
-        private UserModel _user;
-        public UserModel User
+        private UserModel _userModelDB;
+        public UserModel UserModelDB
         {
-            get { return _user; }
-            set { _user = value; }
+            get { return _userModelDB; }
+            set { _userModelDB = value; }
         }
 
-        private TestModel _test;
-        public TestModel Test
+        private TestModel _testModelDB;
+        public TestModel TestModelDB
         {
-            get { return _test; }
-            set { _test = value; }
+            get { return _testModelDB; }
+            set { _testModelDB = value; }
         }
+
+        private AngleModel _angleModelDB;
+        public AngleModel AngleModelDB
+        {
+            get { return _angleModelDB; }
+            set { _angleModelDB = value; }
+        }
+
+        private List<Angle> angle = new List<Angle>();
+
+        private Dictionary<string, Dictionary<string, AngleModel>> _angleReadFile = new Dictionary<string, Dictionary<string, AngleModel>>();
+
+        private Dictionary<string, Dictionary<string, AngleModel>> exportData = new Dictionary<string, Dictionary<string, AngleModel>>();
 
         #endregion
 
@@ -34,61 +50,96 @@ namespace BodyPosition.MVVM.View
         {
             InitializeComponent();
 
-            User = user;
-            Test = test;
+            UserModelDB = user;
+            TestModelDB = test;
 
-            userUID.Text = User.ID.ToString();
-            userName.Text = User.FirstName + " " + User.LastName;
-            testName.Text = Test.TestName;
-        }
+            _angleReadFile = ReadAngle();
+            exportData = _angleReadFile;
 
-        #endregion
+            LoadAngle();
+            refreshDataGrid();
 
-        #region Record and Play video
-        private void playPauseVideo(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void OpenRecording()
-        {
-            var ofd = new Microsoft.Win32.OpenFileDialog();
-            ofd.Filter = "Kinect Eventstream|*.xef|All files|*.*";
-            ofd.Title = "Open a recording";
-
-            if (ofd.ShowDialog() == true)
-            {
-                KinectManager.Instance.RecordingStopped += RecordingStopped;
-                KinectManager.Instance.OpenRecording(ofd.FileName);
-
-                //if (!IsRunning) IsRunning = true;
-            }
-        }
-        private void RecordingStopped()
-        {
-            IsRunning = false;
-        }
-
-        private bool isRunning = false;
-        public bool IsRunning
-        {
-            get
-            {
-                return isRunning;
-            }
-
-            set
-            {
-                isRunning = value;
-            }
         }
 
         #endregion
 
         #region Open data table
-        private void openTable(object sender, RoutedEventArgs e)
+        private void SearchData(object sender, RoutedEventArgs e)
         {
+            if (searchTextBlock.Text != "")
+            {
+                List<Angle> searchAngle = new List<Angle>();
+                string EventIndex = searchTextBlock.Text.ToString();
+                foreach (var dic in AngleModelDB.Angle)
+                {
+                    if (dic.Key == EventIndex)
+                    {
+                        searchAngle.Add(AngleModelDB.Angle[EventIndex]);   
+                    }
+                }
 
+                if (searchAngle.Count > 0)
+                {
+                    DGAngle.ItemsSource = null;
+                    DGAngle.ItemsSource = searchAngle;
+
+                    tblPelvisFront.Text = searchAngle[0].FrontPelvis.ToString();
+                    tblShoulderRight.Text = searchAngle[0].RightShoulder.ToString();
+                    tblShoulderLeft.Text = searchAngle[0].LeftShoulder.ToString();
+                    tblPelvisSideAngle.Text = searchAngle[0].Pelvis.ToString();
+                    tblKneeAngle.Text = searchAngle[0].Knee.ToString();
+                    tblAnkleAngle.Text = searchAngle[0].Ankle.ToString();
+                }
+                else
+                {
+                    angle.Clear();
+                    _angleReadFile.Clear();
+
+                    tblPelvisFront.Text = "";
+                    tblShoulderRight.Text = "";
+                    tblShoulderLeft.Text = "";
+                    tblPelvisSideAngle.Text = "";
+                    tblKneeAngle.Text = "";
+                    tblAnkleAngle.Text = "";
+
+                    _angleReadFile = ReadAngle();
+                    MessageBox.Show("ไม่พบเลข ID ที่คุณต้องการ");
+
+                    LoadAngle();
+                    refreshDataGrid();
+                }
+            }
+            else
+            {
+                angle.Clear();
+                _angleReadFile.Clear();
+
+                tblPelvisFront.Text = "";
+                tblShoulderRight.Text = "";
+                tblShoulderLeft.Text = "";
+                tblPelvisSideAngle.Text = "";
+                tblKneeAngle.Text = "";
+                tblAnkleAngle.Text = "";
+
+                _angleReadFile = ReadAngle();
+
+                LoadAngle();
+                refreshDataGrid();
+            }
+        }
+        private void LoadAngle()
+        {
+            _angleModelDB = _angleReadFile[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()];
+
+            foreach (var dic in AngleModelDB.Angle)
+            {
+                angle.Add(dic.Value);
+            }
+        }
+        private void refreshDataGrid()
+        {
+            DGAngle.ItemsSource = null;
+            DGAngle.ItemsSource = angle;
         }
 
         #endregion
@@ -105,55 +156,43 @@ namespace BodyPosition.MVVM.View
             xlWorkBook = xlApp.Workbooks.Add(misValue);
             xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
-            string cs = "URI=file: D:/Learning/Kinect Project/BodyPosition/BodyPosition/BodyPosition/Database.db";
             string data = String.Empty;
 
             int i = 0;
             int j = 0;
 
-            xlWorkSheet.Cells[1, 1] = "ID";
-            xlWorkSheet.Cells[1, 2] = "Time";
-            xlWorkSheet.Cells[1, 3] = "Front Pelvis Angle";
-            xlWorkSheet.Cells[1, 4] = "Right Shoulder";
-            xlWorkSheet.Cells[1, 5] = "Left Shoulder";
-            xlWorkSheet.Cells[1, 6] = "Pelvis Angle";
-            xlWorkSheet.Cells[1, 7] = "Knee Angle";
-            xlWorkSheet.Cells[1, 8] = "Ankle Angle";
+            xlWorkSheet.Cells[1, 1] = "Event ID";
+            xlWorkSheet.Cells[1, 2] = "Front Pelvis Angle";
+            xlWorkSheet.Cells[1, 3] = "Right Shoulder";
+            xlWorkSheet.Cells[1, 4] = "Left Shoulder";
+            xlWorkSheet.Cells[1, 5] = "Pelvis Angle";
+            xlWorkSheet.Cells[1, 6] = "Knee Angle";
+            xlWorkSheet.Cells[1, 7] = "Ankle Angle";
 
-            string fileName = Test.TestName+".xls";
+            string fileName = TestModelDB.TestName + ".xls";
 
-            using (SQLiteConnection con = new SQLiteConnection(cs))
+            foreach(var row in exportData[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()].Angle)
             {
-                con.Open();
-
-                string stm = "SELECT * FROM "+Test.TestName;
-
-                using (SQLiteCommand cmd = new SQLiteCommand(stm, con))
-                {
-                    using (SQLiteDataReader rdr = cmd.ExecuteReader())
-                    {
-                        while (rdr.Read()) // Reading Rows
-                        {
-                            for (j = 0; j <= rdr.FieldCount - 1; j++) // Looping throw colums
-                            {
-                                data = rdr.GetValue(j).ToString();
-                                xlWorkSheet.Cells[i + 2, j + 1] = data;  
-                            }
-                            i++;
-                        }
-                    }
-                }
-                con.Close();
+                xlWorkSheet.Cells[i + 2, j + 1] = row.Value.Id;
+                xlWorkSheet.Cells[i + 2, j + 2] = row.Value.FrontPelvis;
+                xlWorkSheet.Cells[i + 2, j + 3] = row.Value.RightShoulder;
+                xlWorkSheet.Cells[i + 2, j + 4] = row.Value.LeftShoulder;
+                xlWorkSheet.Cells[i + 2, j + 5] = row.Value.Pelvis;
+                xlWorkSheet.Cells[i + 2, j + 6] = row.Value.Knee;
+                xlWorkSheet.Cells[i + 2, j + 7] = row.Value.Ankle;
+                i++;
             }
+
             xlWorkBook.SaveAs(fileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             xlWorkBook.Close(true, misValue, misValue);
             xlApp.Quit();
+
+            MessageBox.Show("นำออกเป็น Excel ไฟล์สำเร็จ สามารถตรวจได้ที่ Document โฟลเดอร์");
 
             releaseObject(xlWorkSheet);
             releaseObject(xlWorkBook);
             releaseObject(xlApp);
         }
-
         private static void releaseObject(object obj)
         {
             try
@@ -172,5 +211,15 @@ namespace BodyPosition.MVVM.View
             }
         }
         #endregion
+
+        #region Json Method
+        private Dictionary<string, Dictionary<string, AngleModel>> ReadAngle()
+        {
+            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json")));
+            var angleModel = AngleModel.FromJson(json.ToString());
+            return angleModel;
+        }
+        #endregion
+
     }
 }

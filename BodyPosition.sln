@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31229.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BodyPosition", "BodyPosition\BodyPosition.csproj", "{6B3CD285-8B05-46D0-AFFC-7073F53FDFD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightBuzz.Vitruvius", "..\..\Vitruvius-master\Kinect v2\WPF\LightBuzz.Vitruvius\LightBuzz.Vitruvius.csproj", "{89E39683-D56D-4604-971B-587C22C62934}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightBuzz.Vitruvius", "LightBuzz.Vitruvius\LightBuzz.Vitruvius.csproj", "{89E39683-D56D-4604-971B-587C22C62934}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

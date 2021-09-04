@@ -86,19 +86,10 @@
 
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="150" />
                     <DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="150" />
-                    <DataGridTextColumn Header="UID" Binding="{Binding Uid}" Width="150" />
+                    <DataGridTextColumn Header="UID" Binding="{Binding UserId}" Width="150" />
                     <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="150" />
                     <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="150" />
 
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Name="ResultButton" Content="Result" Click="Result"
-                                        Width="80"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

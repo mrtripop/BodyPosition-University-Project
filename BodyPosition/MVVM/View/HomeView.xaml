@@ -26,6 +26,13 @@
                     Margin="20,0,0,0"
                     FontSize="24"/>
 
+            <Button x:Name="DatabaseButton" 
+                    Width="220" Height="80" Margin="222,35,1278,35"
+                    Click="OpenDatabaseView" 
+                    Content="Database"
+                    Foreground="White"
+                    FontSize="26"/>
+
             <TextBlock Text="Body Position"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
@@ -33,6 +40,14 @@
                    Foreground="White"
                    FontWeight="Bold"
                    Grid.Row="0"/>
+            
+            <Button x:Name="OpenKinectButton" 
+                Width="220" Height="80" Margin="1233,35,267,35"
+                Click="OpenKinect" 
+                Content="Close"
+                Foreground="White"
+                FontSize="26"/>
+
         </Grid>
 
         <StackPanel Grid.Row="1">
@@ -68,6 +83,8 @@
                                 <controls:KinectAngle x:Name="angleSidePelvis" Opacity="0.5" Fill="White" />
                                 <controls:KinectAngle x:Name="angleKnee" Opacity="0.5" Fill="Orange" />
                                 <controls:KinectAngle x:Name="angleAnkle" Opacity="0.5" Fill="DeepPink" />
+                                <controls:KinectAngle x:Name="dRight" Opacity="0.5" Fill="Black" />
+                                <controls:KinectAngle x:Name="dLeft" Opacity="0.5" Fill="Black" />
                             </Canvas>
                         </Viewbox>
                        
@@ -261,7 +278,7 @@
 
                             <Button x:Name="recordButton" 
                                     Width="220" Height="120" Margin="10,5,10,5"
-                                    Click="recordVideoAndAngle" 
+                                    Click="Record" 
                                     Content="Record"
                                     Grid.Row="0" 
                                     Foreground="White"
@@ -284,13 +301,6 @@
                                         Foreground="White" Click="SideDetect" Content="Side"/>
 
                             </StackPanel>
-                            <Button x:Name="saveButton" 
-                                Width="220" Height="70"
-                                Click="saveResultToDatabase" 
-                                Content="Save"
-                                Grid.Row="2" 
-                                Foreground="White"
-                                FontSize="18"/>
 
                             <TextBlock x:Name="statusText" 
                                        Foreground="White"

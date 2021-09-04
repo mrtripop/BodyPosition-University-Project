@@ -1,27 +1,10 @@
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\avcodec-57.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\avdevice-57.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\avfilter-6.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\avformat-57.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\avutil-55.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\postproc-54.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\swresample-2.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\swscale-4.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Accord.dll.config
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\BodyPosition.exe.config
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\BodyPosition.exe
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\BodyPosition.pdb
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Accord.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Accord.Video.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Dapper.dll
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\LightBuzz.Vitruvius.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\MaterialDesignColors.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\MaterialDesignThemes.Wpf.dll
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\System.Data.SQLite.dll
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\LightBuzz.Vitruvius.pdb
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\LightBuzz.Vitruvius.xml
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Accord.xml
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Accord.Video.xml
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Dapper.pdb
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Dapper.xml
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\MaterialDesignColors.pdb
@@ -57,16 +40,79 @@ D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.csproj.CopyComplete
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.exe
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.pdb
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Accord.Video.FFMPEG.x64.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Accord.Video.FFMPEG.x64.xml
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Newtonsoft.Json.dll
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Newtonsoft.Json.xml
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\AForge.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Coding4Fun.Kinect.Wpf.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Kinect.Toolbox.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Kinect.Toolbox.Voice.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Expression.Drawing.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.Toolkit.FaceTracking.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.Tools.dll
-D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\AForge.xml
 D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.Tools.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.pdb
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Extras.pdb
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Extras.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Platform.pdb
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Platform.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\SharpDX.DXGI.dll
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\SharpDX.pdb
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\SharpDX.DXGI.pdb
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\SharpDX.DXGI.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\SharpDX.MediaFoundation.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\System.Reactive.Core.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\System.Reactive.Interfaces.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\System.Reactive.Linq.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\System.Reactive.PlatformServices.xml
+D:\Learning\Kinect Project\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\System.Reactive.Windows.Threading.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.csproj.AssemblyReference.cache
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\Theme\ButtonTheme.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\Theme\MenuButtonTheme.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\Theme\TextBoxTheme.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MainWindow.g.cs
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\DatabaseView.g.cs
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\HomeView.g.cs
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\RegisterPage.g.cs
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\TestSelectionView.g.cs
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\UserSelectionView.g.cs
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\App.g.cs
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition_MarkupCompile.cache
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition_MarkupCompile.lref
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\App.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MainWindow.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\DatabaseView.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\HomeView.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\RegisterPage.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\TestSelectionView.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\UserSelectionView.baml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.g.resources
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.pdb
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\BodyPosition.exe.config
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\BodyPosition.exe
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\BodyPosition.pdb
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\CommonServiceLocator.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Extras.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Platform.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Kinect.Toolbox.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Kinect.Toolbox.Voice.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\LightBuzz.Vitruvius.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\MaterialDesignColors.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\MaterialDesignThemes.Wpf.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.Toolkit.FaceTracking.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.Tools.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Newtonsoft.Json.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\System.Windows.Interactivity.dll
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\LightBuzz.Vitruvius.pdb
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\LightBuzz.Vitruvius.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.pdb
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Extras.pdb
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Extras.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Platform.pdb
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\GalaSoft.MvvmLight.Platform.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\MaterialDesignColors.pdb
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\MaterialDesignThemes.Wpf.pdb
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\MaterialDesignThemes.Wpf.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.Tools.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\bin\x64\Debug\Newtonsoft.Json.xml
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.Properties.Resources.resources
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.csproj.GenerateResource.cache
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.csproj.CoreCompileInputs.cache
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.csproj.CopyComplete
+D:\Learning\KinectProject\BodyPosition\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.exe
