@@ -491,25 +491,21 @@
             <param name="position">The 3D space point.</param>
             <returns>The X, Y coordinates of the point.</returns>
         </member>
-        <member name="M:LightBuzz.Vitruvius.Controls.KinectViewer.DrawBody(Microsoft.Kinect.Body,System.Boolean,System.String,System.Double,System.Windows.Media.Brush,System.Double,System.Windows.Media.Brush)">
+        <member name="M:LightBuzz.Vitruvius.Controls.KinectViewer.DrawBody(Microsoft.Kinect.Body,System.Double,System.Windows.Media.Brush,System.Double,System.Windows.Media.Brush)">
             <summary>
             Draws the specified body.
             </summary>
             <param name="body">The body to draw.</param>
-            <param name="change">Change state to draw side of body.</param>
-            <param name="frontDraw">Select side of body to draw.</param>
             <param name="jointRadius">The size of the joint ellipses.</param>
             <param name="jointBrush">The brush used to draw the joints.</param>
             <param name="boneThickness">The thickness of the bone lines.</param>
             <param name="boneBrush">The brush used to draw the bones.</param>
         </member>
-        <member name="M:LightBuzz.Vitruvius.Controls.KinectViewer.DrawBody(Microsoft.Kinect.Body,System.Boolean,System.String)">
+        <member name="M:LightBuzz.Vitruvius.Controls.KinectViewer.DrawBody(Microsoft.Kinect.Body)">
             <summary>
             Draws the specified body.
             </summary>
             <param name="body">The body to draw</param>
-            <param name="change">status change side of body</param>
-            <param name="frontDraw">The body to draw</param>
         </member>
         <member name="M:LightBuzz.Vitruvius.Controls.KinectViewer.InitializeComponent">
             <summary>
@@ -524,11 +520,6 @@
         <member name="F:LightBuzz.Vitruvius.Controls.BodyVisual.CONNECTIONS">
             <summary>
             The joint connections (bones).
-            </summary>
-        </member>
-        <member name="F:LightBuzz.Vitruvius.Controls.BodyVisual.CONNECTIONSIDE">
-            <summary>
-            The joint connections (bones) left side of body.
             </summary>
         </member>
         <member name="P:LightBuzz.Vitruvius.Controls.BodyVisual.TrackingId">
@@ -587,11 +578,10 @@
             <param name="first">The position of the start of the segment.</param>
             <param name="second">The position of the end of the segment.</param>
         </member>
-        <member name="M:LightBuzz.Vitruvius.Controls.BodyVisual.Create(System.String,System.UInt64,System.Collections.Generic.IEnumerable{Microsoft.Kinect.JointType},System.Double,System.Windows.Media.Brush,System.Double,System.Windows.Media.Brush)">
+        <member name="M:LightBuzz.Vitruvius.Controls.BodyVisual.Create(System.UInt64,System.Collections.Generic.IEnumerable{Microsoft.Kinect.JointType},System.Double,System.Windows.Media.Brush,System.Double,System.Windows.Media.Brush)">
             <summary>
             Creates a new BodyVisual object with the specified parameters.
             </summary>
-            <param name="frontDraw">Select side of body to draw.</param>
             <param name="trackingId">The tracking ID of the corresponding body.</param>
             <param name="joints">The joint types of the body.</param>
             <param name="jointRadius">The desired joint size.</param>

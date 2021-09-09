@@ -131,6 +131,7 @@
     </Compile>
     <Compile Include="Core\KinectManager.cs" />
     <Compile Include="Core\ObservableObject.cs" />
+    <Compile Include="Core\RelayCommand.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -170,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MVVM\Model\AngleModel.cs" />
+    <Compile Include="MVVM\Model\BodyModel.cs" />
     <Compile Include="MVVM\Model\TestModel.cs" />
     <Compile Include="MVVM\Model\UserModel.cs" />
     <Compile Include="MVVM\View\DatabaseView.xaml.cs">

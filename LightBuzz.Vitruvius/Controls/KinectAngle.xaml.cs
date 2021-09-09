@@ -176,8 +176,6 @@ namespace LightBuzz.Vitruvius.Controls
         /// <param name="end">The vector of the end point.</param>
         public void Update(Point start, Point end)
         {
-            Pen blackPen = new Pen(Brushes.Black, 4);
-
             start.ToVector3();
             end.ToVector3();
 

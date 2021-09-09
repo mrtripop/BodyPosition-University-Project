@@ -61,3 +61,42 @@ D:\Learning\KinectProject\BodyPosition\BodyPosition\LightBuzz.Vitruvius\obj\Debu
 D:\Learning\KinectProject\BodyPosition\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.dll
 D:\Learning\KinectProject\BodyPosition\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.pdb
 D:\Learning\KinectProject\BodyPosition\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.csproj.AssemblyReference.cache
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\bin\Debug\LightBuzz.Vitruvius.XML
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\bin\Debug\LightBuzz.Vitruvius.dll
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\bin\Debug\LightBuzz.Vitruvius.pdb
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\bin\Debug\Microsoft.Kinect.Face.xml
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.csproj.AssemblyReference.cache
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectAngle.g.cs
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectJointSelector.g.cs
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectViewer.g.cs
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius_MarkupCompile.cache
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius_MarkupCompile.lref
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectAngle.baml
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectJointSelector.baml
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectViewer.baml
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.g.resources
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.csproj.CoreCompileInputs.cache
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.csproj.CopyComplete
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.dll
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.pdb
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\bin\Debug\LightBuzz.Vitruvius.XML
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\bin\Debug\LightBuzz.Vitruvius.dll
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\bin\Debug\LightBuzz.Vitruvius.pdb
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\bin\Debug\Microsoft.Kinect.dll
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\bin\Debug\Microsoft.Kinect.Face.dll
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\bin\Debug\Microsoft.Kinect.xml
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\bin\Debug\Microsoft.Kinect.Face.xml
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.csproj.AssemblyReference.cache
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectAngle.g.cs
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectJointSelector.g.cs
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectViewer.g.cs
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius_MarkupCompile.cache
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius_MarkupCompile.lref
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectAngle.baml
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectJointSelector.baml
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\Controls\KinectViewer.baml
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.g.resources
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.csproj.CoreCompileInputs.cache
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.csproj.CopyComplete
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.dll
+C:\Users\tripo\OneDrive\Documents\Kinect Record\BodyPosition\LightBuzz.Vitruvius\obj\Debug\LightBuzz.Vitruvius.pdb

@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System;
 using Microsoft.Kinect.Tools;
+using System.Windows.Media.Media3D;
 
 namespace BodyPosition.MVVM.View
 {
@@ -66,7 +67,7 @@ namespace BodyPosition.MVVM.View
         private bool change = false;
 
         KinectManager km = KinectManager.Instance;
-        
+
         #endregion
 
         #region Initialize
@@ -101,88 +102,93 @@ namespace BodyPosition.MVVM.View
                 _playersController.BodyLeft += UserReporter_BodyLeft;
                 _playersController.Start();
 
-            } 
+            }
         }
         #endregion
 
-        //record angle at first index
-        //edit joint
-        //accurate angle
+        //draw line duration
+
+        //accurate angle ****
 
         //ui
 
         #region Method
         private void CalculateAngle(Body body)
         {
-            // Edit joint
+
+            // New body management. ex. position, joint, ----> Vector3D
             Point footPoint = viewer.GetPoint(body.Joints[JointType.FootLeft].Position);
             Point anklePoint = viewer.GetPoint(body.Joints[JointType.AnkleLeft].Position);
             Point kneePoint = viewer.GetPoint(body.Joints[JointType.KneeLeft].Position);
             anklePoint.Y = footPoint.Y;
 
-            durationLeft = body.DurationLeft();
-            durationRight = body.DurationRight();
-
             Point shoulderR = new Point(body.Joints[JointType.ShoulderRight].Position.X, body.Joints[JointType.ShoulderRight].Position.Y);
             Point shoulderL = new Point(body.Joints[JointType.ShoulderLeft].Position.X, body.Joints[JointType.ShoulderLeft].Position.Y);
             Point spine = new Point(body.Joints[JointType.ShoulderRight].Position.X, body.Joints[JointType.SpineMid].Position.Y);
 
-            if (frontDraw == "front")
-            {
-                //show
-                anglePelvisFront.Update(body.Joints[spineMid], body.Joints[spineBase], body.Joints[hipRight], 50);
-                spaceShoulderRight.Update(spine, shoulderR);
-                spaceShoulderLeft.Update(spine, shoulderL);
 
-                // dont show
-                //angleSidePelvis.Clear();
-                //angleKnee.Clear();
-                //angleAnkle.Clear();
 
-                //tblPelvisSideAngle.Text = "";
-                //tblKneeAngle.Text = "";
-                //tblAnkleAngle.Text = "";
+            //shoulder
+            Vector3D spineShoulder3d = body.Joints[JointType.SpineShoulder].Position.ToVector3();
+            Vector3D shoulderLeft3d = body.Joints[JointType.ShoulderLeft].Position.ToVector3();
+            Vector3D shoulderRight3d = body.Joints[JointType.ShoulderRight].Position.ToVector3();
 
-                //display
-                tblPelvisFront.Text = ((int)anglePelvisFront.Angle).ToString();
-                tblShoulderRight.Text = durationRight.ToString("0.00");
-                tblShoulderLeft.Text = durationLeft.ToString("0.00");
+            //mid
+            Vector3D spineMid3d = body.Joints[JointType.SpineMid].Position.ToVector3();
 
-                // show
-                angleSidePelvis.Update(body.Joints[spineMid], body.Joints[hipLeft], body.Joints[kneeLeft], 50);
-                angleKnee.Update(body.Joints[hipLeft], body.Joints[kneeLeft], body.Joints[ankleLeft], 50);
-                angleKnee.SweepDirection = SweepDirection.Counterclockwise;
-                angleAnkle.Update(kneePoint, anklePoint, footPoint, 50);
+            //base
+            Vector3D spineBase3d = body.Joints[JointType.SpineBase].Position.ToVector3();
 
-                // display
-                tblPelvisSideAngle.Text = ((int)angleSidePelvis.Angle).ToString();
-                tblKneeAngle.Text = ((int)angleKnee.Angle).ToString();
-                tblAnkleAngle.Text = ((int)angleAnkle.Angle).ToString();
+            //left
+            Vector3D hipLeft3d = body.Joints[JointType.HipLeft].Position.ToVector3();
+            Vector3D kneeLeft3d = body.Joints[JointType.KneeLeft].Position.ToVector3();
+            Vector3D ankleLeft3d = body.Joints[JointType.AnkleLeft].Position.ToVector3();
+            Vector3D footLeft3d = body.Joints[JointType.FootLeft].Position.ToVector3();
 
-            }
-            else if (frontDraw == "side")
-            {
-                // dont show
-                anglePelvisFront.Clear();
-                spaceShoulderRight.Clear();
-                spaceShoulderLeft.Clear();
+            //right
+            Vector3D hipRight3d = body.Joints[JointType.HipRight].Position.ToVector3();
+            Vector3D kneeRight3d = body.Joints[JointType.KneeRight].Position.ToVector3();
+            Vector3D ankleRight3d = body.Joints[JointType.AnkleRight].Position.ToVector3();
+            Vector3D footRight3d = body.Joints[JointType.FootRight].Position.ToVector3();
 
-                tblPelvisFront.Text = "";
-                tblShoulderRight.Text = "";
-                tblShoulderLeft.Text = "";
+            //edit ankle position
+            Vector3D editAnkleLeftFootRef = new Vector3D(ankleLeft3d.X, footLeft3d.Y, ankleLeft3d.Z);
+            Vector3D editAnkleRightFootRef = new Vector3D(ankleRight3d.X, footRight3d.Y, ankleRight3d.Z);
 
-                // show
-                angleSidePelvis.Update(body.Joints[spineMid], body.Joints[hipLeft], body.Joints[kneeLeft], 50);
-                angleKnee.Update(body.Joints[hipLeft], body.Joints[kneeLeft], body.Joints[ankleLeft], 50);
-                angleKnee.SweepDirection = SweepDirection.Counterclockwise;
-                angleAnkle.Update(kneePoint, anklePoint, footPoint, 50);
+            //psudo vector3d spineMid refference
+            Vector3D shoulderLeftBaseRef = new Vector3D(shoulderLeft3d.X, spineMid3d.Y, spineMid3d.Z);
+            Vector3D shoulderRightBaseRef = new Vector3D(shoulderRight3d.X, spineMid3d.Y, spineMid3d.Z);
 
-                // display
-                tblPelvisSideAngle.Text = ((int)angleSidePelvis.Angle).ToString();
-                tblKneeAngle.Text = ((int)angleKnee.Angle).ToString();
-                tblAnkleAngle.Text = ((int)angleAnkle.Angle).ToString();
+            //psudo spine base refference
+            Vector3D psudoKneeLeftMapSpineBaseX = new Vector3D(spineBase3d.X, kneeLeft3d.Y, kneeLeft3d.Z);
 
-            }
+            //calculate duration between shoulder and spineMid
+            durationLeft = body.DurationLeft();
+            durationRight = body.DurationRight();
+
+            //body display
+            //show front ---> position of this topic must correct!
+            anglePelvisFront.Update(spineMid3d, spineBase3d, hipRight3d, 50);
+            spaceShoulderRight.Update(spine, shoulderR);
+            spaceShoulderLeft.Update(spine, shoulderL);
+
+            // show left ---> position of this topic must correct!
+            angleSidePelvis.Update(spineMid3d, spineBase3d, psudoKneeLeftMapSpineBaseX, 50);
+
+
+            angleKnee.Update(hipLeft3d, kneeLeft3d, editAnkleLeftFootRef, 50);
+            angleAnkle.Update(kneeLeft3d, editAnkleLeftFootRef, footLeft3d, 50);
+
+            //show right ---> position of this topic must correct!
+
+            //text display
+            tblPelvisFront.Text = ((int)anglePelvisFront.Angle).ToString();
+            tblShoulderRight.Text = durationRight.ToString("0.00");
+            tblShoulderLeft.Text = durationLeft.ToString("0.00");
+            tblPelvisSideAngle.Text = ((int)angleSidePelvis.Angle).ToString();
+            tblKneeAngle.Text = ((int)angleKnee.Angle).ToString();
+            tblAnkleAngle.Text = ((int)angleAnkle.Angle).ToString();
+
 
             RecordJoint();
         }
@@ -190,40 +196,22 @@ namespace BodyPosition.MVVM.View
         {
             if (recordingState)
             {
-                if (frontDraw == "front")
+                if (bodyEntered)
                 {
-                    if (bodyEntered)
+                    Angle newAngle = new Angle()
                     {
-                        Angle newAngle = new Angle()
-                        {
-                            Id = counter,
-                            FrontPelvis = anglePelvisFront.Angle,
-                            RightShoulder = durationRight,
-                            LeftShoulder = durationLeft,
-                            Pelvis = angleSidePelvis.Angle,
-                            Knee = angleKnee.Angle,
-                            Ankle = angleAnkle.Angle
-                        };
+                        Id = counter,
+                        FrontPelvis = anglePelvisFront.Angle,
+                        RightShoulder = durationRight,
+                        LeftShoulder = durationLeft,
+                        Pelvis = angleSidePelvis.Angle,
+                        Knee = angleKnee.Angle,
+                        Ankle = angleAnkle.Angle
+                    };
 
-                        _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
-                    }
-                    else
-                    {
-                        Angle newAngle = new Angle()
-                        {
-                            Id = counter,
-                            FrontPelvis = 0,
-                            RightShoulder = 0,
-                            LeftShoulder = 0,
-                            Pelvis = 0,
-                            Knee = 0,
-                            Ankle = 0
-                        };
-
-                        _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
-                    }
+                    _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
                 }
-                else if (frontDraw == "side")
+                else
                 {
                     Angle newAngle = new Angle()
                     {
@@ -231,13 +219,12 @@ namespace BodyPosition.MVVM.View
                         FrontPelvis = 0,
                         RightShoulder = 0,
                         LeftShoulder = 0,
-                        Pelvis = angleSidePelvis.Angle,
-                        Knee = angleKnee.Angle,
-                        Ankle = angleAnkle.Angle
+                        Pelvis = 0,
+                        Knee = 0,
+                        Ankle = 0
                     };
 
                     _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
-
                 }
             }
         }
@@ -262,10 +249,9 @@ namespace BodyPosition.MVVM.View
             {
                 if (frame != null)
                 {
-                    //นับไปเรื่อยๆทั้งที่ยังไม่
                     if (recordingState)
-                    { 
-                         counter += 1; 
+                    {
+                        counter += 1;
                     }
 
                     if (viewer.Visualization == Visualization.Color)
@@ -284,11 +270,13 @@ namespace BodyPosition.MVVM.View
                     _playersController.Update(bodies);
 
                     Body body = bodies.Closest();
+
                     if (body != null)
                     {
-                        viewer.DrawBody(body, change, frontDraw);
+                        //วาดกระดูก
+                        viewer.DrawBody(body);
+                        //คำนวณองศา
                         CalculateAngle(body);
-                        change = false;
                     }
                 }
             }
@@ -321,23 +309,21 @@ namespace BodyPosition.MVVM.View
         private void RecordingState(object sender, EventArgs e)
         {
             Console.WriteLine("state change");
-            //if (km.saveState == KStudioRecordingState.Recording)
-            //{
-            //    recordingState = true;
-            //}
-            //else if (km.saveState == KStudioRecordingState.Done)
-            //{
-            //    recordingState = false;
-            //}
         }
         #endregion
 
         #region Button Event Method
         private void Record(object sender, RoutedEventArgs e)
         {
+            if (_angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Count > 0 && recordingState == false)
+            {
+                MessageBox.Show("การทดสอบนี้มีข้อมูลถูกบันทึกไว้อยู่แล้ว");
+                return;
+            }
+
             if (!recordingState)
             {
-                if (MessageBox.Show("Recording using the Kinect Studio API generates HUGE files (~140 MB for 1 second). Are you sure, you want to proceed?",
+                if (MessageBox.Show("การบันทึกนั้นใช้ Kinect Studio API เพื่อสร้างไฟล์ขนาดใหญ่(~140 MB for 1 second). กรุณาตรวจสอบพื้นที่การจัดเก็บให้เพียงพอ",
                     "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     var sfd = new SaveFileDialog();
@@ -373,20 +359,6 @@ namespace BodyPosition.MVVM.View
                 recordingState = false;
             }
         }
-        private void FrontDetect(object sender, RoutedEventArgs e)
-        {
-            frontDraw = "front";
-            change = true;
-            frontButton.Background = redColor;
-            sideButton.Background = blueColor;
-        }
-        private void SideDetect(object sender, RoutedEventArgs e)
-        {
-            frontDraw = "side";
-            change = true;
-            sideButton.Background = redColor;
-            frontButton.Background = blueColor;
-        }     
         private void OpenDatabaseView(object sender, RoutedEventArgs e)
         {
             DatabaseView bdv = new DatabaseView(UserModelHome, TestModelHome);
@@ -395,7 +367,7 @@ namespace BodyPosition.MVVM.View
         private void OpenKinect(object sender, RoutedEventArgs e)
         {
 
-        }    
+        }
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             if (_playersController != null)

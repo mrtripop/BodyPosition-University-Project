@@ -36,6 +36,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 using System.Windows.Shapes;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
@@ -189,34 +190,19 @@ namespace LightBuzz.Vitruvius.Controls
         /// Draws the specified body.
         /// </summary>
         /// <param name="body">The body to draw.</param>
-        /// <param name="change">Change state to draw side of body.</param>
-        /// <param name="frontDraw">Select side of body to draw.</param>
         /// <param name="jointRadius">The size of the joint ellipses.</param>
         /// <param name="jointBrush">The brush used to draw the joints.</param>
         /// <param name="boneThickness">The thickness of the bone lines.</param>
         /// <param name="boneBrush">The brush used to draw the bones.</param>
-        public void DrawBody(Body body, bool change, string frontDraw, double jointRadius, Brush jointBrush, double boneThickness, Brush boneBrush)
+        public void DrawBody(Body body, double jointRadius, Brush jointBrush, double boneThickness, Brush boneBrush)
         {
             if (body == null || !body.IsTracked) return;
 
             BodyVisual visual = _bodyVisuals.Where(b => b.TrackingId == body.TrackingId).FirstOrDefault();
 
-            if (change)
-            {
-                canvas.Children.Clear();
-
-                foreach (var visualL in _bodyVisuals)
-                {
-                    visualL.Clear();
-                }
-
-                _bodyVisuals.Clear();
-                visual = null;
-            }
-
             if (visual == null)
             {
-                visual = BodyVisual.Create(frontDraw, body.TrackingId, body.Joints.Keys, jointRadius, jointBrush, boneThickness, boneBrush);
+                visual = BodyVisual.Create(body.TrackingId, body.Joints.Keys, jointRadius, jointBrush, boneThickness, boneBrush);
 
                 foreach (var ellipse in visual.Joints.Values)
                 {
@@ -231,154 +217,124 @@ namespace LightBuzz.Vitruvius.Controls
                 _bodyVisuals.Add(visual);
             }
 
+            Point footLPoint = GetPoint(body.Joints[JointType.FootLeft].Position);
+            Point footRpoint = GetPoint(body.Joints[JointType.FootRight].Position);
+
             foreach (var joint in body.Joints)
             {
-                if (frontDraw == "front")
+                if (joint.Key == JointType.SpineShoulder || joint.Key == JointType.SpineMid || joint.Key == JointType.SpineBase ||
+                    joint.Key == JointType.ShoulderLeft || joint.Key == JointType.HipLeft || joint.Key == JointType.KneeLeft || joint.Key == JointType.AnkleLeft || joint.Key == JointType.FootLeft ||
+                    joint.Key == JointType.ShoulderRight || joint.Key == JointType.HipRight || joint.Key == JointType.KneeRight || joint.Key == JointType.AnkleRight || joint.Key == JointType.FootRight
+                    )
                 {
-                    if (joint.Key == JointType.SpineShoulder || joint.Key == JointType.SpineMid || joint.Key == JointType.SpineBase ||
-                        joint.Key == JointType.ShoulderLeft  || joint.Key == JointType.HipLeft  || joint.Key == JointType.KneeLeft || joint.Key == JointType.AnkleLeft  || joint.Key == JointType.FootLeft ||
-                        joint.Key == JointType.ShoulderRight || joint.Key == JointType.HipRight || joint.Key == JointType.KneeRight|| joint.Key == JointType.AnkleRight || joint.Key == JointType.FootRight
-                        )
+                    Point point = GetPoint(joint.Value.Position);
+
+                    // update LR shoulder joint at Y
+                    if (joint.Key == JointType.ShoulderLeft || joint.Key == JointType.ShoulderRight)
                     {
-                        Point point = GetPoint(joint.Value.Position);
-
-                        // update LR shoulder joint
-                        if (joint.Key == JointType.ShoulderLeft || joint.Key == JointType.ShoulderRight)
-                        {
-                            point.Y -= 30;
-                        }
-                        // update spine shoulder joint
-                        if(joint.Key == JointType.SpineShoulder)
-                        {
-                            point.Y -= 30;
-                        }
-
-                        //// update spine base joint
-                        //if (joint.Key == JointType.SpineBase)
-                        //{
-                        //    point.Y -= 80;
-                        //}
-                        //// update LR hip joint
-                        //if (joint.Key == JointType.HipLeft || joint.Key == JointType.HipRight)
-                        //{
-                        //    point.Y -= 80;
-                        if (joint.Key == JointType.HipLeft)
-                        {
-                            point.X -= 20;
-                        }
-                        else if(joint.Key == JointType.HipRight)
-                        {
-                            point.X += 20;
-                        }
-                        //}
-
-                        visual.UpdateJoint(joint.Key, point);
+                        point.Y -= 30;
                     }
-                }
-                else if(frontDraw == "side")
-                {
-                    if (joint.Key == JointType.SpineMid || joint.Key == JointType.SpineBase ||
-                        joint.Key == JointType.HipLeft || joint.Key == JointType.KneeLeft || joint.Key == JointType.AnkleLeft || joint.Key == JointType.FootLeft
-                        )
+                    // update spine shoulder joint at Y
+                    if (joint.Key == JointType.SpineShoulder)
                     {
-                        Point point = GetPoint(joint.Value.Position);
-
-                        // update ankle joint at position Y
-                        if (joint.Key == JointType.AnkleLeft)
-                        {
-                            Point ankleLPoint = GetPoint(joint.Value.Position);
-                            Point footLPoint = GetPoint(body.Joints[JointType.FootLeft].Position);
-
-                            ankleLPoint.Y = footLPoint.Y;
-
-                            point = ankleLPoint;
-                        }
-
-                        visual.UpdateJoint(joint.Key, point);
-
+                        point.Y -= 30;
                     }
+
+                    // update LR hip joint at X
+                    if (joint.Key == JointType.HipLeft)
+                    {
+                        point.X -= 20;
+                    }
+                    else if (joint.Key == JointType.HipRight)
+                    {
+                        point.X += 20;
+                    }
+
+                    //Update LR ankle at position Y
+                    if (joint.Key == JointType.AnkleLeft)
+                    {
+                        point.Y = footLPoint.Y;
+                    }
+                    else if (joint.Key == JointType.AnkleRight)
+                    {
+                        point.Y = footRpoint.Y;
+                    }
+
+
+                    visual.UpdateJoint(joint.Key, point);
                 }
             }
 
-            if (frontDraw == "front")
+            foreach (var bone in visual.CONNECTIONS)
             {
-                foreach (var bone in visual.CONNECTIONS)
+                Point first = GetPoint(body.Joints[bone.Item1].Position);
+                Point second = GetPoint(body.Joints[bone.Item2].Position);
+
+                // update LR shoulder-spineShoulder at position Y
+                if ((bone.Item1 == JointType.SpineShoulder && bone.Item2 == JointType.ShoulderLeft) ||
+                    (bone.Item1 == JointType.SpineShoulder && bone.Item2 == JointType.ShoulderRight))
                 {
-                    Point first = GetPoint(body.Joints[bone.Item1].Position);
-                    Point second = GetPoint(body.Joints[bone.Item2].Position);
-
-                    // update shoulder and spine shoulder at position Y
-                    if ((bone.Item1 == JointType.SpineShoulder && bone.Item2 == JointType.ShoulderLeft) ||
-                        (bone.Item1 == JointType.SpineShoulder && bone.Item2 == JointType.ShoulderRight))
-                    {
-                        first.Y -= 30;
-                        second.Y -= 30;
-                    }
-
-                    // update spine mid and spine base at position Y
-                    //if (bone.Item1 == JointType.SpineMid && bone.Item2 == JointType.SpineBase)
-                    //{
-                    //    second.Y  -= 80;
-                    //}
-
-                    // update spine base and hip at position Y
-                    if ((bone.Item1 == JointType.SpineBase && bone.Item2 == JointType.HipLeft) ||
-                        (bone.Item1 == JointType.SpineBase && bone.Item2 == JointType.HipRight))
-                    {
-                        //first.Y -= 80;
-                        //second.Y -= 80;
-                        if (bone.Item2 == JointType.HipLeft)
-                        {
-                            second.X -= 20;
-                        }
-                        else if (bone.Item2 == JointType.HipRight)
-                        {
-                            second.X += 20;
-                        }
-                    }
-
-                    //// update L hip and L knee at position Y
-                    if (bone.Item1 == JointType.HipLeft && bone.Item2 == JointType.KneeLeft ||
-                        bone.Item1 == JointType.HipRight && bone.Item2 == JointType.KneeRight)
-                    {
-                        //first.Y -= 80;
-                        if (bone.Item1 == JointType.HipLeft)
-                        {
-                            first.X -= 20;
-                        }
-                        else
-                        {
-                            first.X += 20;
-                        }
-                    }
-
-                    visual.UpdateBone(bone, first, second);
+                    first.Y -= 30;
+                    second.Y -= 30;
                 }
-            }
-            else if(frontDraw == "side")
-            {
-                foreach (var bone in visual.CONNECTIONSIDE)
+
+                // update spineBase-LR hip at position X
+                if ((bone.Item1 == JointType.SpineBase && bone.Item2 == JointType.HipLeft) ||
+                    (bone.Item1 == JointType.SpineBase && bone.Item2 == JointType.HipRight))
                 {
-                    Point first = GetPoint(body.Joints[bone.Item1].Position); // knee
-                    Point second = GetPoint(body.Joints[bone.Item2].Position); // ankle
-
-                    // update ankle joint
-                    if(bone.Item1 == JointType.AnkleLeft && bone.Item2 == JointType.FootLeft)
+                    if (bone.Item2 == JointType.HipLeft)
                     {
-                        first.Y = second.Y;
+                        second.X -= 20;
                     }
-
-                    if (bone.Item1 == JointType.KneeLeft && bone.Item2 == JointType.AnkleLeft)
+                    else if (bone.Item2 == JointType.HipRight)
                     {
-                        Point ankle = GetPoint(body.Joints[bone.Item2].Position);
-                        Point foot = GetPoint(body.Joints[JointType.FootLeft].Position);
-
-                        ankle.Y = foot.Y;
-                        second.Y = ankle.Y;
+                        second.X += 20;
                     }
-
-                    visual.UpdateBone(bone, first, second);
                 }
+
+                // update L hip and L knee at position X
+                if (bone.Item1 == JointType.HipLeft && bone.Item2 == JointType.KneeLeft ||
+                    bone.Item1 == JointType.HipRight && bone.Item2 == JointType.KneeRight)
+                {
+                    if (bone.Item1 == JointType.HipLeft)
+                    {
+                        first.X -= 20;
+                    }
+                    else
+                    {
+                        first.X += 20;
+                    }
+                }
+
+                // update LR bone knee-ankle at position Y
+                if (bone.Item1 == JointType.KneeLeft && bone.Item2 == JointType.AnkleLeft ||
+                    bone.Item1 == JointType.KneeRight && bone.Item2 == JointType.AnkleRight)
+                {
+                    if (bone.Item2 == JointType.AnkleLeft)
+                    {
+                        second.Y = footLPoint.Y;
+                    }
+                    else if (bone.Item2 == JointType.AnkleRight)
+                    {
+                        second.Y = footRpoint.Y;
+                    }
+                }
+
+                // update LR bone ankle-foot at position Y
+                if (bone.Item1 == JointType.AnkleLeft && bone.Item2 == JointType.FootLeft || 
+                    bone.Item1 == JointType.AnkleRight && bone.Item2 == JointType.FootRight)
+                {
+                    if (bone.Item1 == JointType.AnkleLeft)
+                    {
+                        first.Y = footLPoint.Y;
+                    }
+                    else if (bone.Item1 == JointType.AnkleRight)
+                    {
+                        first.Y = footRpoint.Y;
+                    }
+                }
+
+                visual.UpdateBone(bone, first, second);
             }
         }
 
@@ -386,11 +342,9 @@ namespace LightBuzz.Vitruvius.Controls
         /// Draws the specified body.
         /// </summary>
         /// <param name="body">The body to draw</param>
-        /// <param name="change">status change side of body</param>
-        /// <param name="frontDraw">The body to draw</param>
-        public void DrawBody(Body body,bool change, string frontDraw)
+        public void DrawBody(Body body)
         {
-            DrawBody(body, change, frontDraw, DEFAULT_RADIUS, DEFAULT_BRUSH, DEFAULT_THICKNESS, DEFAULT_BRUSH);
+            DrawBody(body, DEFAULT_RADIUS, DEFAULT_BRUSH, DEFAULT_THICKNESS, DEFAULT_BRUSH);
         }
 
         #endregion
@@ -440,25 +394,7 @@ namespace LightBuzz.Vitruvius.Controls
             // Left Leg
             new Tuple<JointType, JointType>(JointType.HipLeft, JointType.KneeLeft),
             new Tuple<JointType, JointType>(JointType.KneeLeft, JointType.AnkleLeft),
-            new Tuple<JointType, JointType>(JointType.AnkleLeft, JointType.FootLeft)
-        };
-
-        /// <summary>
-        /// The joint connections (bones) left side of body.
-        /// </summary>
-        public readonly List<Tuple<JointType, JointType>> CONNECTIONSIDE = new List<Tuple<JointType, JointType>>
-        {
-            // Torso
-            new Tuple<JointType, JointType>(JointType.Head, JointType.Neck),
-            new Tuple<JointType, JointType>(JointType.Neck, JointType.SpineShoulder),
-            new Tuple<JointType, JointType>(JointType.SpineShoulder, JointType.SpineMid),
-            new Tuple<JointType, JointType>(JointType.SpineMid, JointType.SpineBase),
-            new Tuple<JointType, JointType>(JointType.SpineBase, JointType.HipLeft),
-
-            // Left Leg
-            new Tuple<JointType, JointType>(JointType.HipLeft, JointType.KneeLeft),
-            new Tuple<JointType, JointType>(JointType.KneeLeft, JointType.AnkleLeft),
-            new Tuple<JointType, JointType>(JointType.AnkleLeft, JointType.FootLeft)
+            new Tuple<JointType, JointType>(JointType.AnkleLeft, JointType.FootLeft),
         };
 
         #endregion
@@ -569,7 +505,6 @@ namespace LightBuzz.Vitruvius.Controls
         /// <summary>
         /// Creates a new BodyVisual object with the specified parameters.
         /// </summary>
-        /// <param name="frontDraw">Select side of body to draw.</param>
         /// <param name="trackingId">The tracking ID of the corresponding body.</param>
         /// <param name="joints">The joint types of the body.</param>
         /// <param name="jointRadius">The desired joint size.</param>
@@ -577,45 +512,26 @@ namespace LightBuzz.Vitruvius.Controls
         /// <param name="boneThickness">The desired line thickness.</param>
         /// <param name="boneBrush">The desired line brush.</param>
         /// <returns>A new instance of BodyVisual.</returns>
-        public static BodyVisual Create(string frontDraw, ulong trackingId, IEnumerable<JointType> joints, double jointRadius, Brush jointBrush, double boneThickness, Brush boneBrush)
+        public static BodyVisual Create(ulong trackingId, IEnumerable<JointType> joints, double jointRadius, Brush jointBrush, double boneThickness, Brush boneBrush)
         {
             BodyVisual bodyVisual = new BodyVisual
             {
                 TrackingId = trackingId
             };
 
-            if (frontDraw == "front")
+            foreach (var joint in joints)
             {
-                foreach (var joint in joints)
+                if (joint == JointType.SpineShoulder || joint == JointType.SpineMid || joint == JointType.SpineBase || joint == JointType.ShoulderLeft || joint == JointType.ShoulderRight ||
+                    joint == JointType.HipLeft || joint == JointType.HipRight || joint == JointType.KneeLeft || joint == JointType.KneeRight || joint == JointType.AnkleLeft  ||
+                    joint == JointType.FootLeft || joint == JointType.FootRight || joint == JointType.Neck || joint == JointType.Head || joint == JointType.AnkleRight)
                 {
-                    if (joint == JointType.SpineShoulder || joint == JointType.SpineMid || joint == JointType.SpineBase || joint == JointType.ShoulderLeft || joint == JointType.ShoulderRight || 
-                        joint == JointType.HipLeft || joint == JointType.HipRight || joint == JointType.KneeLeft || joint == JointType.KneeRight || joint == JointType.AnkleLeft || joint == JointType.AnkleRight||
-                        joint == JointType.FootLeft || joint == JointType.FootRight || joint == JointType.Neck || joint == JointType.Head)
-                    {
-                        bodyVisual.AddJoint(joint, jointRadius, jointBrush);
-                    }
-                }
-
-                foreach (var bone in bodyVisual.CONNECTIONS)
-                {
-                    bodyVisual.AddBone(bone, boneThickness, boneBrush);
+                    bodyVisual.AddJoint(joint, jointRadius, jointBrush);
                 }
             }
-            else if(frontDraw == "side")
-            {
-                foreach (var joint in joints)
-                {
-                    if (joint == JointType.SpineMid || joint == JointType.SpineBase || joint == JointType.SpineShoulder || joint == JointType.Neck || joint == JointType.Head || joint == JointType.HipLeft || 
-                        joint == JointType.KneeLeft || joint == JointType.AnkleLeft || joint == JointType.FootLeft)
-                    {
-                        bodyVisual.AddJoint(joint, jointRadius, jointBrush);
-                    }
-                }
 
-                foreach (var bone in bodyVisual.CONNECTIONSIDE)
-                {
-                    bodyVisual.AddBone(bone, boneThickness, boneBrush);
-                }
+            foreach (var bone in bodyVisual.CONNECTIONS)
+            {
+                bodyVisual.AddBone(bone, boneThickness, boneBrush);
             }
 
             return bodyVisual;
