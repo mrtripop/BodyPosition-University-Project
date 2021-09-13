@@ -282,7 +282,7 @@ namespace BodyPosition.MVVM.View
                     }
                     else
                     {
-                        if (recordingState && sw.ElapsedMilliseconds >= 3.272727)
+                        if (recordingState && (sw.ElapsedMilliseconds >= 3.272727))
                         {
                             counter += 1;
 
@@ -383,7 +383,7 @@ namespace BodyPosition.MVVM.View
 
                 recordButton.Background = blueColor;
                 recordButton.Content = "Record";
-                //recordingState = false;
+                recordingState = false;
             }
         }
         private void OpenDatabaseView(object sender, RoutedEventArgs e)
