@@ -5,6 +5,8 @@ using Microsoft.Kinect;
 using Microsoft.Kinect.Tools;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -112,7 +114,15 @@ namespace BodyPosition
         private AudioBeamFrameReader _audioReader;
 
         private KStudioClient client;
+        public KStudioClient Client
+        {
+            get { return this.client; }
+        }
         private KStudioRecording recording;
+        public KStudioRecording Recording
+        {
+            get { return this.recording; }
+        }
         private KStudioPlayback playback;
 
         private static readonly object syncRoot = new object();
@@ -221,15 +231,12 @@ namespace BodyPosition
             recording = client.CreateRecording(filePath, streamCollection, KStudioRecordingFlags.IgnoreOptionalStreams);
             recording.StateChanged += OnRecordingStateChanged;
             recording.Start();
-            
+
         }
 
         private void OnRecordingStateChanged(object sender, EventArgs e)
         {
-            saveState = recording.State;
-            Console.WriteLine(saveState);
-
-            RecordingStateChanged?.Invoke(sender, e);
+            Console.WriteLine(recording.State);
         }
 
         public void StopRecording()

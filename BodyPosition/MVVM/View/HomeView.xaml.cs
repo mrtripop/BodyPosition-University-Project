@@ -14,6 +14,7 @@ using System.IO;
 using System;
 using Microsoft.Kinect.Tools;
 using System.Windows.Media.Media3D;
+using System.Diagnostics;
 
 namespace BodyPosition.MVVM.View
 {
@@ -68,6 +69,8 @@ namespace BodyPosition.MVVM.View
 
         KinectManager km = KinectManager.Instance;
 
+        private Stopwatch sw;
+
         #endregion
 
         #region Initialize
@@ -106,11 +109,7 @@ namespace BodyPosition.MVVM.View
         }
         #endregion
 
-        //draw line duration
-
         //accurate angle ****
-
-        //ui
 
         #region Method
         private void CalculateAngle(Body body)
@@ -194,8 +193,10 @@ namespace BodyPosition.MVVM.View
         }
         private void RecordJoint()
         {
-            if (recordingState)
+            if (recordingState && (sw.ElapsedMilliseconds >= 3.272727))
             {
+                counter += 1;
+
                 if (bodyEntered)
                 {
                     Angle newAngle = new Angle()
@@ -226,6 +227,7 @@ namespace BodyPosition.MVVM.View
 
                     _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
                 }
+                sw.Restart();
             }
         }
         private void Save()
@@ -249,10 +251,10 @@ namespace BodyPosition.MVVM.View
             {
                 if (frame != null)
                 {
-                    if (recordingState)
-                    {
-                        counter += 1;
-                    }
+                    //if (recordingState && (sw.ElapsedMilliseconds >= 33))
+                    //{
+                    //    counter += 1;
+                    //}
 
                     if (viewer.Visualization == Visualization.Color)
                     {
@@ -277,6 +279,27 @@ namespace BodyPosition.MVVM.View
                         viewer.DrawBody(body);
                         //คำนวณองศา
                         CalculateAngle(body);
+                    }
+                    else
+                    {
+                        if (recordingState && sw.ElapsedMilliseconds >= 3.272727)
+                        {
+                            counter += 1;
+
+                            Angle newAngle = new Angle()
+                            {
+                                Id = counter,
+                                FrontPelvis = 0,
+                                RightShoulder = 0,
+                                LeftShoulder = 0,
+                                Pelvis = 0,
+                                Knee = 0,
+                                Ankle = 0
+                            };
+
+                            _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
+                            sw.Restart();
+                        }
                     }
                 }
             }
@@ -308,7 +331,8 @@ namespace BodyPosition.MVVM.View
         }
         private void RecordingState(object sender, EventArgs e)
         {
-            Console.WriteLine("state change");
+            Console.WriteLine("recording state: Done");
+            recordingState = false;
         }
         #endregion
 
@@ -334,6 +358,7 @@ namespace BodyPosition.MVVM.View
                     if (sfd.ShowDialog() == true)
                     {
                         km.StartRecording(sfd.FileName);
+                        sw = Stopwatch.StartNew();
                         km.RecordingStateChanged += RecordingState;
 
                         recordButton.Background = redColor;
@@ -350,13 +375,15 @@ namespace BodyPosition.MVVM.View
             else
             {
                 km.StopRecording();
+                sw.Stop();
+                sw.Restart();
                 km.RecordingStateChanged += RecordingState;
 
                 Save();
 
                 recordButton.Background = blueColor;
                 recordButton.Content = "Record";
-                recordingState = false;
+                //recordingState = false;
             }
         }
         private void OpenDatabaseView(object sender, RoutedEventArgs e)
