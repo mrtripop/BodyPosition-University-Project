@@ -29,15 +29,6 @@ namespace BodyPosition.MVVM.View
         MultiSourceFrameReader _reader;
         PlayersController _playersController;
 
-        JointType hipRight = JointType.HipRight;
-        JointType spineBase = JointType.SpineBase;
-        JointType spineMid = JointType.SpineMid;
-        JointType hipLeft = JointType.HipLeft;
-
-        JointType kneeLeft = JointType.KneeLeft;
-        JointType ankleLeft = JointType.AnkleLeft;
-        JointType footLeft = JointType.FootLeft;
-
         private UserModel myUserModelHome;
         public UserModel UserModelHome
         {
@@ -64,7 +55,7 @@ namespace BodyPosition.MVVM.View
         private string frontDraw = "front";
 
         private bool recordingState = false;
-        private bool bodyEntered = false;
+        //private bool bodyEntered = true;
         private bool change = false;
 
         KinectManager km = KinectManager.Instance;
@@ -108,8 +99,6 @@ namespace BodyPosition.MVVM.View
             }
         }
         #endregion
-
-        //accurate angle ****
 
         #region Method
         private void CalculateAngle(Body body)
@@ -193,41 +182,24 @@ namespace BodyPosition.MVVM.View
         }
         private void RecordJoint()
         {
-            if (recordingState && (sw.ElapsedMilliseconds >= 3.272727))
+            if (recordingState)
+            //if (recordingState)
             {
-                counter += 1;
+                Console.WriteLine("counter: " + counter);
+                counter++;
 
-                if (bodyEntered)
+                Angle newAngle = new Angle()
                 {
-                    Angle newAngle = new Angle()
-                    {
-                        Id = counter,
-                        FrontPelvis = anglePelvisFront.Angle,
-                        RightShoulder = durationRight,
-                        LeftShoulder = durationLeft,
-                        Pelvis = angleSidePelvis.Angle,
-                        Knee = angleKnee.Angle,
-                        Ankle = angleAnkle.Angle
-                    };
+                    Id = counter,
+                    FrontPelvis = anglePelvisFront.Angle,
+                    RightShoulder = durationRight,
+                    LeftShoulder = durationLeft,
+                    Pelvis = angleSidePelvis.Angle,
+                    Knee = angleKnee.Angle,
+                    Ankle = angleAnkle.Angle
+                };
 
-                    _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
-                }
-                else
-                {
-                    Angle newAngle = new Angle()
-                    {
-                        Id = counter,
-                        FrontPelvis = 0,
-                        RightShoulder = 0,
-                        LeftShoulder = 0,
-                        Pelvis = 0,
-                        Knee = 0,
-                        Ankle = 0
-                    };
-
-                    _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
-                }
-                sw.Restart();
+                _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
             }
         }
         private void Save()
@@ -242,6 +214,10 @@ namespace BodyPosition.MVVM.View
         #endregion
 
         #region Event Method
+        int color = 0;
+        int bd = 0;
+        int bdn = 0;
+
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             var reference = e.FrameReference.AcquireFrame();
@@ -251,10 +227,12 @@ namespace BodyPosition.MVVM.View
             {
                 if (frame != null)
                 {
-                    //if (recordingState && (sw.ElapsedMilliseconds >= 33))
-                    //{
-                    //    counter += 1;
-                    //}
+                    if (recordingState)
+                    {
+                        Console.WriteLine("color: " + color);
+                        color++;
+                    }
+
 
                     if (viewer.Visualization == Visualization.Color)
                     {
@@ -268,6 +246,13 @@ namespace BodyPosition.MVVM.View
             {
                 if (frame != null)
                 {
+                    if (recordingState)
+                    {
+                        Console.WriteLine("bd: " + bd);
+                        bd++;
+                    }
+
+
                     var bodies = frame.Bodies();
                     _playersController.Update(bodies);
 
@@ -275,43 +260,27 @@ namespace BodyPosition.MVVM.View
 
                     if (body != null)
                     {
+                        if (recordingState)
+                        {
+                            Console.WriteLine("bdn: " + bdn);
+                            bdn++;
+                        }
+
+
                         //วาดกระดูก
                         viewer.DrawBody(body);
                         //คำนวณองศา
                         CalculateAngle(body);
-                    }
-                    else
-                    {
-                        if (recordingState && (sw.ElapsedMilliseconds >= 3.272727))
-                        {
-                            counter += 1;
-
-                            Angle newAngle = new Angle()
-                            {
-                                Id = counter,
-                                FrontPelvis = 0,
-                                RightShoulder = 0,
-                                LeftShoulder = 0,
-                                Pelvis = 0,
-                                Knee = 0,
-                                Ankle = 0
-                            };
-
-                            _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
-                            sw.Restart();
-                        }
                     }
                 }
             }
         }
         private void UserReporter_BodyEntered(object sender, UsersControllerEventArgs e)
         {
-            bodyEntered = true;
         }
         private void UserReporter_BodyLeft(object sender, UsersControllerEventArgs e)
         {
             //do something
-            bodyEntered = false;
 
             viewer.Clear();
 
@@ -390,10 +359,6 @@ namespace BodyPosition.MVVM.View
         {
             DatabaseView bdv = new DatabaseView(UserModelHome, TestModelHome);
             bdv.ShowDialog();
-        }
-        private void OpenKinect(object sender, RoutedEventArgs e)
-        {
-
         }
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {

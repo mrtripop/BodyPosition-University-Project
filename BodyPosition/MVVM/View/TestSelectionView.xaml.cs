@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Navigation;
 
 namespace BodyPosition.MVVM.View
@@ -51,6 +53,30 @@ namespace BodyPosition.MVVM.View
 
             LoadTest(UserModel);
             refreshTest();
+
+        }
+        private void Update(object sender, RoutedEventArgs e)
+        {
+            TestSelected = dgTest.SelectedItem as TestModel;
+            if (TestSelected == null)
+            {
+                return;
+            }
+
+            TestModel nTest = new TestModel()
+            {
+                Id = TestSelected.Id,
+                TestName = TestSelected.TestName,
+                UserId = TestSelected.UserId,
+                Date = TestSelected.Date,
+                Time = TestSelected.Time
+            };
+
+            _testReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
+            _testReadFile[UserModel.Id.ToString()].Add(TestSelected.Id.ToString(), nTest);
+            WriteTest(_testReadFile);
+
+            MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");
         }
         private void AddTest(object sender, RoutedEventArgs e)
         {
@@ -90,6 +116,11 @@ namespace BodyPosition.MVVM.View
         {
             TestSelected = dgTest.SelectedItem as TestModel;
 
+            if(TestSelected == null)
+            {
+                return;
+            }
+
             _testReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
             WriteTest(_testReadFile);
 
@@ -111,15 +142,19 @@ namespace BodyPosition.MVVM.View
         private void Selected(object sender, RoutedEventArgs e)
         {
             TestSelected = dgTest.SelectedItem as TestModel;
+            if (TestSelected == null)
+            {
+                return;
+            }
             NavigationService.Navigate(new HomeView(UserModel, TestSelected));
         }
         private void LoadTest(UserModel userModel)
         {
             _testSelectedByUserID = _testReadFile[userModel.Id.ToString()];
 
-            for (int i = 1; i < _testSelectedByUserID.Count + 1; i++)
+            foreach (var ts in _testSelectedByUserID)
             {
-                test.Add(_testSelectedByUserID[i.ToString()]);
+                test.Add(_testSelectedByUserID[ts.Value.Id.ToString()]);
             }
         }
         private void refreshTest()
@@ -159,7 +194,7 @@ namespace BodyPosition.MVVM.View
             File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json"), angle.ToJson());
         }
 
+
         #endregion
-        
     }
 }

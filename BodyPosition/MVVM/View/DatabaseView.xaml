@@ -2,12 +2,12 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-        xmlns:local="clr-namespace:BodyPosition.MVVM.View"
-        xmlns:controls="clr-namespace:LightBuzz.Vitruvius.Controls;assembly=LightBuzz.Vitruvius"      
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"      
         mc:Ignorable="d" 
-        d:DesignHeight="750" d:DesignWidth="1280"
-        Background="#152032">
+        d:DesignHeight="768" d:DesignWidth="1366"
+        Background="#152032"
+        Title="STS Database"
+        WindowState="Maximized">
 
     <Grid VerticalAlignment="Center">
 
@@ -156,7 +156,8 @@
 
                 <StackPanel Grid.Row="2" VerticalAlignment="Center">
                     <Button x:Name="exportButton" 
-                                    Width="150" Height="80"
+                            Margin="100,0,100,0"
+                                    Height="60"
                                     Foreground="White" 
                                     FontSize="26"
                                     Click="exportTable" 

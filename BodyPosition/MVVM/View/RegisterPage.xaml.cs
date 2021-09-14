@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace BodyPosition.MVVM.View
 {
@@ -24,6 +25,9 @@ namespace BodyPosition.MVVM.View
         private string Date;
         private string Time;
 
+        private DateTime currentTime = DateTime.Now;
+        private DateTime selectDateTime;
+
         private Dictionary<string,UserModel> _userReadList = new Dictionary<string, UserModel>();
 
         private Dictionary<string, Dictionary<string, TestModel>> _testReadList = new Dictionary<string, Dictionary<string, TestModel>>();
@@ -37,6 +41,7 @@ namespace BodyPosition.MVVM.View
             _userReadList = ReadFile();
             _testReadList = ReadTest();
             _angleReadList = ReadAngle();
+
         }
 
         private void Save(object sender, RoutedEventArgs e)
@@ -54,8 +59,8 @@ namespace BodyPosition.MVVM.View
             {
                 HeightUser = double.Parse(height.Text);
             }
-            Date = date.Text;
-            Time = time.Text;
+            Date = selectDateTime.ToString("dd/MM/yyyy");
+            Time = currentTime.ToString("HH:mm");
 
             // check info
             if (FirstName != "" && LastName != "" && Gender != "" && Phone != "" && weight.Text != "" &&
@@ -85,7 +90,6 @@ namespace BodyPosition.MVVM.View
                 Dictionary<string, AngleModel> newAngle = new Dictionary<string, AngleModel>();
                 _angleReadList.Add(newUser.Id.ToString(), newAngle);
                 WriteAngle(_angleReadList);
-
 
                 MessageBox.Show("บันทึกสำเร็จ");
                 this.Close();
@@ -138,6 +142,12 @@ namespace BodyPosition.MVVM.View
         private void Cancel(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void date_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            DateTime newDate = (DateTime)(((DatePicker)sender).SelectedDate);
+            selectDateTime = newDate;
         }
     }
 }

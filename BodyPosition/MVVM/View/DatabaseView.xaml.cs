@@ -7,6 +7,7 @@ using BodyPosition.MVVM.Model.TestModel;
 using BodyPosition.MVVM.Model.AngleModel;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Windows.Media;
 
 namespace BodyPosition.MVVM.View
 {
@@ -43,6 +44,7 @@ namespace BodyPosition.MVVM.View
 
         private Dictionary<string, Dictionary<string, AngleModel>> exportData = new Dictionary<string, Dictionary<string, AngleModel>>();
 
+        private int exporting = 0;
         #endregion
 
         #region Initialize
@@ -147,51 +149,66 @@ namespace BodyPosition.MVVM.View
         #region Export to Excel
         private void exportTable(object sender, RoutedEventArgs e)
         {
-            Excel.Application xlApp;
-            Excel.Workbook xlWorkBook;
-            Excel.Worksheet xlWorkSheet;
-            object misValue = System.Reflection.Missing.Value;
+            exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x00, 0x66));
+            exportButton.Content = "Exporting...";
+            exporting++;
 
-            xlApp = new Excel.Application();
-            xlWorkBook = xlApp.Workbooks.Add(misValue);
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-            string data = String.Empty;
-
-            int i = 0;
-            int j = 0;
-
-            xlWorkSheet.Cells[1, 1] = "Event ID";
-            xlWorkSheet.Cells[1, 2] = "Front Pelvis Angle";
-            xlWorkSheet.Cells[1, 3] = "Right Shoulder";
-            xlWorkSheet.Cells[1, 4] = "Left Shoulder";
-            xlWorkSheet.Cells[1, 5] = "Pelvis Angle";
-            xlWorkSheet.Cells[1, 6] = "Knee Angle";
-            xlWorkSheet.Cells[1, 7] = "Ankle Angle";
-
-            string fileName = TestModelDB.TestName + ".xls";
-
-            foreach(var row in exportData[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()].Angle)
+            if (exporting == 1)
             {
-                xlWorkSheet.Cells[i + 2, j + 1] = row.Value.Id;
-                xlWorkSheet.Cells[i + 2, j + 2] = row.Value.FrontPelvis;
-                xlWorkSheet.Cells[i + 2, j + 3] = row.Value.RightShoulder;
-                xlWorkSheet.Cells[i + 2, j + 4] = row.Value.LeftShoulder;
-                xlWorkSheet.Cells[i + 2, j + 5] = row.Value.Pelvis;
-                xlWorkSheet.Cells[i + 2, j + 6] = row.Value.Knee;
-                xlWorkSheet.Cells[i + 2, j + 7] = row.Value.Ankle;
-                i++;
+                Excel.Application xlApp;
+                Excel.Workbook xlWorkBook;
+                Excel.Worksheet xlWorkSheet;
+                object misValue = System.Reflection.Missing.Value;
+
+                xlApp = new Excel.Application();
+                xlWorkBook = xlApp.Workbooks.Add(misValue);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+                string data = String.Empty;
+
+                int i = 0;
+                int j = 0;
+
+                xlWorkSheet.Cells[1, 1] = "Event ID";
+                xlWorkSheet.Cells[1, 2] = "Front Pelvis Angle";
+                xlWorkSheet.Cells[1, 3] = "Right Shoulder";
+                xlWorkSheet.Cells[1, 4] = "Left Shoulder";
+                xlWorkSheet.Cells[1, 5] = "Pelvis Angle";
+                xlWorkSheet.Cells[1, 6] = "Knee Angle";
+                xlWorkSheet.Cells[1, 7] = "Ankle Angle";
+
+                string fileName = TestModelDB.TestName + ".xls";
+
+                foreach(var row in exportData[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()].Angle)
+                {
+                    xlWorkSheet.Cells[i + 2, j + 1] = row.Value.Id;
+                    xlWorkSheet.Cells[i + 2, j + 2] = row.Value.FrontPelvis;
+                    xlWorkSheet.Cells[i + 2, j + 3] = row.Value.RightShoulder;
+                    xlWorkSheet.Cells[i + 2, j + 4] = row.Value.LeftShoulder;
+                    xlWorkSheet.Cells[i + 2, j + 5] = row.Value.Pelvis;
+                    xlWorkSheet.Cells[i + 2, j + 6] = row.Value.Knee;
+                    xlWorkSheet.Cells[i + 2, j + 7] = row.Value.Ankle;
+                    i++;
+                }
+
+                xlWorkBook.SaveAs(fileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+
+                MessageBox.Show("นำออกเป็น Excel ไฟล์สำเร็จ สามารถตรวจได้ที่ Document โฟลเดอร์");
+                exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
+                exportButton.Content = "Export";
+                exporting = 0;
+
+                releaseObject(xlWorkSheet);
+                releaseObject(xlWorkBook);
+                releaseObject(xlApp);
             }
-
-            xlWorkBook.SaveAs(fileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-            xlWorkBook.Close(true, misValue, misValue);
-            xlApp.Quit();
-
-            MessageBox.Show("นำออกเป็น Excel ไฟล์สำเร็จ สามารถตรวจได้ที่ Document โฟลเดอร์");
-
-            releaseObject(xlWorkSheet);
-            releaseObject(xlWorkBook);
-            releaseObject(xlApp);
+            else
+            {
+                MessageBox.Show("ระบบกำลังทำการส่งออกเป็น Excel กรุณารอซักครู่");
+            }
+            
         }
         private static void releaseObject(object obj)
         {

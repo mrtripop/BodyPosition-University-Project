@@ -5,13 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BodyPosition.MVVM.View"
       mc:Ignorable="d" 
-      d:DesignHeight="1080" d:DesignWidth="1920"
+      d:DesignHeight="768" d:DesignWidth="1366"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       Title="MainPage">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="100"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -20,16 +20,22 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    FontSize="64"
+                       FontFamily="TH SarabunPSK"
                    Foreground="White"
                    FontWeight="Bold"
                    Grid.Row="0"/>
         </Grid>
 
-        <StackPanel Grid.Row="1"
+        <Grid Grid.Row="1"
                     HorizontalAlignment="Center"
-                    Margin="50"
+                    Margin="10,10,10,30"
                     Width="1200">
-            <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -54,6 +60,7 @@
                            Grid.Column="1" 
                            FontWeight="Bold"
                            HorizontalAlignment="Center"
+                           FontFamily="TH SarabunPSK"
                            Foreground="White">
                     รายชื่อผู้เข้าทดสอบ
                 </TextBlock>
@@ -80,9 +87,9 @@
                     </StackPanel>
                 </StackPanel>
             </Grid>
-
             <DataGrid x:Name="dgUsers" AutoGenerateColumns="False" 
-                      Margin="50,20,50,0"
+                      Margin="50,5,50,5"
+                      Grid.Row="1"
                       RowBackground="Black">
 
                 <DataGrid.Columns>
@@ -91,32 +98,49 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Name="SelectButton" Content="Select" Click="Selected"
-                                        Margin="0,0,10,0"
-                                        Width="70"/>
+                                        Margin="0,0,10,0" Width="80" Background="Green" 
+                                        BorderBrush="Green" Foreground="White"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="70"/>
-                    <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" Width="150"/>
-                    <DataGridTextColumn Header="LastName" Binding="{Binding LastName}" Width="130"/>
-                    <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" Width="100"/>
+                    <!--<DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" Width="120"/>
+                    <DataGridTextColumn Header="LastName" Binding="{Binding LastName}" Width="120"/>
+                    <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" Width="80"/>
                     <DataGridTextColumn Header="Phone" Binding="{Binding Tel}" Width="110"/>
                     <DataGridTextColumn Header="Weight" Binding="{Binding Weight}" Width="80"/>
                     <DataGridTextColumn Header="Height" Binding="{Binding Height}" Width="70"/>
-                    <DataGridTextColumn Header="Dates" Binding="{Binding Date}" Width="80"/>
-                    <DataGridTextColumn Header="Times" Binding="{Binding Time}" Width="80"/>
+                    <DataGridTextColumn Header="Dates" Binding="{Binding Date}" Width="100"/>
+                    <DataGridTextColumn Header="Times" Binding="{Binding Time}" Width="80"/>-->
+
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="70" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="FirstName" Binding="{Binding FirstName}" Width="180"/>
+                    <DataGridTextColumn Header="LastName" Binding="{Binding LastName}" Width="180"/>
+                    <DataGridTextColumn Header="Gender" Binding="{Binding Gender}" Width="100"/>
+                    <DataGridTextColumn Header="Dates" Binding="{Binding Date}" Width="100"/>
+                    <DataGridTextColumn Header="Times" Binding="{Binding Time}" Width="100"/>
 
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Name="DeleteButton" Content="Delete" Click="Delete"
+                                <Button Name="UpdateButton" Content="Update" Click="Update"
                                         Width="80"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="DeleteButton" Content="Delete" Click="Delete"
+                                        Width="80" Background="Red" BorderBrush="Red" 
+                                        Foreground="White"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
+        </Grid>
     </Grid>
 </Page>

@@ -6,11 +6,11 @@
              xmlns:local="clr-namespace:BodyPosition.MVVM.View"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="1920">
+             d:DesignHeight="768" d:DesignWidth="1366">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="100"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -24,21 +24,24 @@
                     Height="70"
                     Margin="20,0,0,0"
                     FontSize="24"/>
-            
+
             <TextBlock Text="Body Position"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    FontSize="64"
+                       FontFamily="TH SarabunPSK"
                    Foreground="White"
                    FontWeight="Bold"
                    Grid.Row="0"/>
         </Grid>
 
-        <StackPanel Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    Margin="50"
-                    Width="1200">
-            <Grid>
+        <Grid Grid.Row="1" HorizontalAlignment="Center" Margin="10,10,10,30" Width="1200" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -62,15 +65,15 @@
                 <TextBlock FontSize="30" 
                            Grid.Column="1" 
                            FontWeight="Bold"
+                           FontFamily="TH SarabunPSK"
                            HorizontalAlignment="Center"
                            Foreground="White">
                     การทดสอบ
                 </TextBlock>
-                
-            </Grid>
 
+            </Grid>
             <DataGrid x:Name="dgTest" AutoGenerateColumns="False" 
-                      Margin="50,20,50,0"
+                      Margin="50,5,50,5" Grid.Row="1"
                       RowBackground="Black">
 
                 <DataGrid.Columns>
@@ -79,27 +82,40 @@
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Button Name="B1" Content="Select" Click="Selected"
-                                        Margin="0,0,20,0"/>
+                                        Margin="0,0,20,0" Background="Green" BorderBrush="Green"
+                                        Foreground="White"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="150" />
-                    <DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="150" />
-                    <DataGridTextColumn Header="UID" Binding="{Binding UserId}" Width="150" />
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80" IsReadOnly="True"/>
+                    <DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="220" />
+                    <DataGridTextColumn Header="User ID" Binding="{Binding UserId}" Width="150" />
                     <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="150" />
                     <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="150" />
 
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Name="DeleteButton" Content="Delete" Click="Delete"
-                                        Width="80"/>
+                                <Button Name="UpdateButton" Content="Update" Click="Update"
+                                        Width="80" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Name="DeleteButton" Content="Delete" Click="Delete"
+                                        Width="80" Background="Red" BorderBrush="Red" Foreground="White"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
                 </DataGrid.Columns>
             </DataGrid>
-        </StackPanel>
+
+
+        </Grid>
     </Grid>
 </Page>

@@ -4,7 +4,7 @@
 library
 C#
 .cs
-D:\Learning\Kinect Project\Vitruvius-master\Kinect v2\WPF\LightBuzz.Vitruvius\obj\Release\
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\LightBuzz.Vitruvius\obj\Release\
 LightBuzz.Vitruvius
 none
 false
@@ -16,5 +16,5 @@ TRACE
 12402444867
 Controls\KinectAngle.xaml;Controls\KinectJointSelector.xaml;Controls\KinectViewer.xaml;
 
-False
+True
 

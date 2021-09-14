@@ -68,12 +68,20 @@ namespace BodyPosition.MVVM.View
         private void Selected(object sender, RoutedEventArgs e)
         {
             UserSelected = dgUsers.SelectedItem as UserModel;
+            if (UserSelected == null)
+            {
+                return;
+            }
             NavigationService.Navigate(new TestSelectionView(UserSelected));
         }
         private void Delete(object sender, RoutedEventArgs e)
         {
             // ตั้งตัวแปรรับค่าที่เลือกมาเป็น UserModel
             UserSelected = dgUsers.SelectedItem as UserModel;
+            if (UserSelected == null)
+            {
+                return;
+            }
 
             users.Remove(UserSelected);
             _userReadFile.Remove(UserSelected.Id.ToString());
@@ -95,6 +103,33 @@ namespace BodyPosition.MVVM.View
 
             LoadUser();
             refreshList();
+        }
+        private void Update(object sender, RoutedEventArgs e)
+        {
+            UserSelected = dgUsers.SelectedItem as UserModel;
+            if (UserSelected == null)
+            {
+                return;
+            }
+
+            UserModel nUser = new UserModel()
+            {
+                FirstName = UserSelected.FirstName,
+                LastName = UserSelected.LastName,
+                Id = UserSelected.Id,
+                Height = UserSelected.Height,
+                Weight = UserSelected.Weight,
+                Gender = UserSelected.Gender,
+                Tel = UserSelected.Tel,
+                Date = UserSelected.Date,
+                Time = UserSelected.Time
+            };
+
+            _userReadFile.Remove(UserSelected.Id.ToString());
+            _userReadFile.Add(UserSelected.Id.ToString(), nUser);
+            WriteFile(_userReadFile);
+
+            MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");
         }
         private void AddUser(object sender, RoutedEventArgs e)
         {

@@ -30,6 +30,7 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    FontSize="64"
+                       FontFamily="TH SarabunPSK"
                    Foreground="White"
                    FontWeight="Bold"
                    Grid.Row="0"/>
@@ -288,15 +289,6 @@
                                     FontSize="18"
                                     Grid.Row="1"
                                     Margin="5"/>
-
-                            <Button x:Name="OpenKinectButton" 
-                                    Width="220" Height="60"
-                                    Click="OpenKinect" 
-                                    Content="Close"
-                                    Foreground="White"
-                                    FontSize="18"
-                                    Grid.Row="2"
-/>
                         </Grid>
                     </StackPanel>
                 </StackPanel>
