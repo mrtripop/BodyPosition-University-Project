@@ -141,7 +141,7 @@
                 </StackPanel>
 
                 <DataGrid x:Name="DGAngle" AutoGenerateColumns="False" Grid.Row="1"
-                          Margin="100,20,100,0" RowBackground="White"
+                          Margin="100,10,100,0" RowBackground="White"
                           BorderThickness="4" Background="Gray" Opacity="0.8" Foreground="Black">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Event Index" Binding="{Binding Id}" Width="100" />
@@ -154,15 +154,27 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <StackPanel Grid.Row="2" VerticalAlignment="Center">
-                    <Button x:Name="exportButton" 
-                            Margin="100,0,100,0"
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button x:Name="importButton" 
+                            Margin="100,0,0,0"
                                     Height="60"
+                            Width="300"
+                                    Foreground="White" 
+                                    FontSize="26"
+                                    Click="ImportTable" 
+                                    Content="Import"
+                                    Grid.Row="2"/>
+                    
+                    <Button x:Name="exportButton" 
+                            Margin="10,0,100,0"
+                                    Height="60"
+                            Width="300"
                                     Foreground="White" 
                                     FontSize="26"
                                     Click="exportTable" 
                                     Content="Export"
                                     Grid.Row="2"/>
+                    
                 </StackPanel>
                 
             </Grid>

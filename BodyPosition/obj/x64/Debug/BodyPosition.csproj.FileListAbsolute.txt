@@ -264,9 +264,12 @@ C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\bin\x64\Debug\Microsof
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\bin\x64\Debug\Microsoft.Kinect.Tools.xml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\bin\x64\Debug\Newtonsoft.Json.xml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.csproj.AssemblyReference.cache
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MainWindow.baml
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\DatabaseView.baml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\Theme\ButtonTheme.baml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\Theme\MenuButtonTheme.baml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\Theme\TextBoxTheme.baml
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\App.baml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MainWindow.g.cs
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\DatabaseView.g.cs
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\HomeView.g.cs
@@ -276,9 +279,6 @@ C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\Vie
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\App.g.cs
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition_MarkupCompile.cache
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition_MarkupCompile.lref
-C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\App.baml
-C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MainWindow.baml
-C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\DatabaseView.baml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\HomeView.baml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\RegisterPage.baml
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\TestSelectionView.baml
@@ -290,3 +290,5 @@ C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosi
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.csproj.CopyComplete
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.exe
 C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\BodyPosition.pdb
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\UserDetialView.g.cs
+C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\MVVM\View\UserDetialView.baml

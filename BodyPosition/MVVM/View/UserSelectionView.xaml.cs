@@ -112,24 +112,15 @@ namespace BodyPosition.MVVM.View
                 return;
             }
 
-            UserModel nUser = new UserModel()
-            {
-                FirstName = UserSelected.FirstName,
-                LastName = UserSelected.LastName,
-                Id = UserSelected.Id,
-                Height = UserSelected.Height,
-                Weight = UserSelected.Weight,
-                Gender = UserSelected.Gender,
-                Tel = UserSelected.Tel,
-                Date = UserSelected.Date,
-                Time = UserSelected.Time
-            };
+            UserDetialView udt = new UserDetialView(UserSelected);
+            udt.ShowDialog();
 
-            _userReadFile.Remove(UserSelected.Id.ToString());
-            _userReadFile.Add(UserSelected.Id.ToString(), nUser);
-            WriteFile(_userReadFile);
+            users.Clear();
+            _userReadFile.Clear();
+            _userReadFile = ReadJson();
+            LoadUser();
+            refreshList();
 
-            MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");
         }
         private void AddUser(object sender, RoutedEventArgs e)
         {

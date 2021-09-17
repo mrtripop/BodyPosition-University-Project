@@ -3,13 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:BodyPosition"
-        xmlns:view="clr-namespace:BodyPosition.MVVM.View"
         mc:Ignorable="d"
         Title="STS System" Height="1080" Width="1920"
         Loaded="Window_Loaded"
         WindowState="Maximized"
-        Background="#152032">
+        Background="#152032"
+        Icon="icons.ico" >
 
     <Grid>
         <Frame Grid.Row="1" 

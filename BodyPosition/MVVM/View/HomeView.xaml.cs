@@ -52,11 +52,9 @@ namespace BodyPosition.MVVM.View
         private double durationRight;
 
         private int counter = 0;
-        private string frontDraw = "front";
 
         private bool recordingState = false;
         //private bool bodyEntered = true;
-        private bool change = false;
 
         KinectManager km = KinectManager.Instance;
 
@@ -358,7 +356,7 @@ namespace BodyPosition.MVVM.View
         private void OpenDatabaseView(object sender, RoutedEventArgs e)
         {
             DatabaseView bdv = new DatabaseView(UserModelHome, TestModelHome);
-            bdv.ShowDialog();
+            bdv.Show();
         }
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {

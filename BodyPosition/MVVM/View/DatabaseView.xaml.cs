@@ -8,6 +8,9 @@ using BodyPosition.MVVM.Model.AngleModel;
 using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Windows.Media;
+using Microsoft.Win32;
+using System.Data;
+using System.Data.OleDb;
 
 namespace BodyPosition.MVVM.View
 {
@@ -43,8 +46,6 @@ namespace BodyPosition.MVVM.View
         private Dictionary<string, Dictionary<string, AngleModel>> _angleReadFile = new Dictionary<string, Dictionary<string, AngleModel>>();
 
         private Dictionary<string, Dictionary<string, AngleModel>> exportData = new Dictionary<string, Dictionary<string, AngleModel>>();
-
-        private int exporting = 0;
         #endregion
 
         #region Initialize
@@ -76,7 +77,7 @@ namespace BodyPosition.MVVM.View
                 {
                     if (dic.Key == EventIndex)
                     {
-                        searchAngle.Add(AngleModelDB.Angle[EventIndex]);   
+                        searchAngle.Add(AngleModelDB.Angle[EventIndex]);
                     }
                 }
 
@@ -147,13 +148,18 @@ namespace BodyPosition.MVVM.View
         #endregion
 
         #region Export to Excel
+
         private void exportTable(object sender, RoutedEventArgs e)
         {
             exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x00, 0x66));
             exportButton.Content = "Exporting...";
-            exporting++;
 
-            if (exporting == 1)
+            var sfd = new SaveFileDialog();
+            sfd.Filter = "Excel|*.xls|All files|*.*";
+            sfd.Title = "Export Angle "+TestModelDB.TestName;
+            sfd.FileName = TestModelDB.TestName;
+
+            if (sfd.ShowDialog() == true)
             {
                 Excel.Application xlApp;
                 Excel.Workbook xlWorkBook;
@@ -177,9 +183,7 @@ namespace BodyPosition.MVVM.View
                 xlWorkSheet.Cells[1, 6] = "Knee Angle";
                 xlWorkSheet.Cells[1, 7] = "Ankle Angle";
 
-                string fileName = TestModelDB.TestName + ".xls";
-
-                foreach(var row in exportData[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()].Angle)
+                foreach (var row in exportData[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()].Angle)
                 {
                     xlWorkSheet.Cells[i + 2, j + 1] = row.Value.Id;
                     xlWorkSheet.Cells[i + 2, j + 2] = row.Value.FrontPelvis;
@@ -191,24 +195,18 @@ namespace BodyPosition.MVVM.View
                     i++;
                 }
 
-                xlWorkBook.SaveAs(fileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.SaveAs(sfd.FileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
                 xlWorkBook.Close(true, misValue, misValue);
                 xlApp.Quit();
 
                 MessageBox.Show("นำออกเป็น Excel ไฟล์สำเร็จ สามารถตรวจได้ที่ Document โฟลเดอร์");
-                exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
-                exportButton.Content = "Export";
-                exporting = 0;
 
                 releaseObject(xlWorkSheet);
                 releaseObject(xlWorkBook);
                 releaseObject(xlApp);
             }
-            else
-            {
-                MessageBox.Show("ระบบกำลังทำการส่งออกเป็น Excel กรุณารอซักครู่");
-            }
-            
+            exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
+            exportButton.Content = "Export";
         }
         private static void releaseObject(object obj)
         {
@@ -236,7 +234,108 @@ namespace BodyPosition.MVVM.View
             var angleModel = AngleModel.FromJson(json.ToString());
             return angleModel;
         }
+        private void WriteAngle(Dictionary<string, Dictionary<string, AngleModel>> angle)
+        {
+            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json"), angle.ToJson());
+        }
+
         #endregion
 
+        #region Read Excel
+        private void ImportTable(object sender, RoutedEventArgs e)
+        {
+            exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x00, 0x66));
+            exportButton.Content = "Importing...";
+
+            string filePath = string.Empty;
+            string fileExt = string.Empty;
+
+            OpenFileDialog file = new OpenFileDialog(); ;
+            file.Filter = "Excel|*.xls|All files|*.*";
+            file.Title = "Import Angle";
+
+            if (file.ShowDialog() == true)
+            {
+                filePath = file.FileName; 
+                fileExt = Path.GetExtension(filePath); 
+                if (fileExt.CompareTo(".xls") == 0 || fileExt.CompareTo(".xlsx") == 0)
+                {
+                    try
+                    {
+                        // read data
+                        DataTable dtExcel = new DataTable();
+                        dtExcel = ReadExcel(filePath, fileExt);
+
+                        // push to Angle Model
+                        Angle newAngle = new Angle()
+                        {
+                            //Id = counter,
+                            //FrontPelvis = anglePelvisFront.Angle,
+                            //RightShoulder = durationRight,
+                            //LeftShoulder = durationLeft,
+                            //Pelvis = angleSidePelvis.Angle,
+                            //Knee = angleKnee.Angle,
+                            //Ankle = angleAnkle.Angle
+                        };
+
+                        //_angleReadFile[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
+
+                        // save to json
+
+                        // update view by json data
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message.ToString());
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("กรุณาเลือกไฟล์ประเภท Excel"); 
+                }
+            }
+
+            exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
+            exportButton.Content = "Export";
+        }
+        private IEnumerable<Angle> ConvertToAngle(DataTable dataTable)
+        {
+            foreach (DataRow row in dataTable.Rows)
+            {
+                yield return new Angle
+                {
+                    Id = Convert.ToInt32(row["Event Index"]),
+                    FrontPelvis = Convert.ToDouble(row["Front Pelvis Angle"]),
+                    LeftShoulder = Convert.ToDouble(row["Left Shoulder"]),
+                    RightShoulder = Convert.ToDouble(row["Right Shoulder"]),
+                    Pelvis = Convert.ToDouble(row["Pelvis Angle"]),
+                    Ankle = Convert.ToDouble(row["Knee Angle"]),
+                    Knee = Convert.ToDouble(row["Ankle Angle"])
+                };
+            }
+        }
+
+        public DataTable ReadExcel(string fileName, string fileExt)
+        {
+            string conn = string.Empty;
+            DataTable dtexcel = new DataTable();
+            if (fileExt.CompareTo(".xls") == 0)
+                conn = @"provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";Extended Properties='Excel 8.0;HRD=Yes;IMEX=1';"; //for below excel 2007  
+            else
+                conn = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileName + ";Extended Properties='Excel 12.0;HDR=NO';"; //for above excel 2007  
+            using (OleDbConnection con = new OleDbConnection(conn))
+            {
+                try
+                {
+                    OleDbDataAdapter oleAdpt = new OleDbDataAdapter("select * from [Sheet1$]", con); //here we read data from sheet1  
+                    oleAdpt.Fill(dtexcel); //fill excel data into dataTable  
+                }
+                catch { }
+            }
+            return dtexcel;
+        }
+
+        #endregion
     }
 }
