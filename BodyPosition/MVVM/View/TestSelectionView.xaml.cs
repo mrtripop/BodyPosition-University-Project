@@ -20,8 +20,9 @@ namespace BodyPosition.MVVM.View
     /// </summary>
     public partial class TestSelectionView : Page
     {
-        private List<TestModel> test = new List<TestModel>();
+        #region Constant
 
+        private List<TestModel> test = new List<TestModel>();
         private TestModel testSelected;
         public TestModel TestSelected
         {
@@ -40,21 +41,31 @@ namespace BodyPosition.MVVM.View
 
         private Dictionary<string, Dictionary<string, TestModel>> _testReadFile = new Dictionary<string, Dictionary<string, TestModel>>();
 
-        private Dictionary<string, Dictionary<string, AngleModel>> _angleReadFile = new Dictionary<string, Dictionary<string, AngleModel>>();
+        private string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+        private string PATH_ANGLE;
+
+        private Database dbTestManager;
+        private Database dbAngleManager;
+
+        #endregion
 
         public TestSelectionView(UserModel user_model)
         {
             InitializeComponent();
 
             UserModel = user_model;
+            dbTestManager = new Database(PATH_TEST);
 
-            _testReadFile = ReadTest();
-            _angleReadFile = ReadAngle();
+            _testReadFile = dbTestManager.ReadTest();
 
             LoadTest(UserModel);
             refreshTest();
 
         }
+        
+
+        #region Button Event Method
+
         private void Update(object sender, RoutedEventArgs e)
         {
             TestSelected = dgTest.SelectedItem as TestModel;
@@ -63,6 +74,7 @@ namespace BodyPosition.MVVM.View
                 return;
             }
 
+            // create new instance
             TestModel nTest = new TestModel()
             {
                 Id = TestSelected.Id,
@@ -72,73 +84,120 @@ namespace BodyPosition.MVVM.View
                 Time = TestSelected.Time
             };
 
+            // create path from TestModel info
+            PATH_ANGLE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + TestSelected.TestName + ".json");
+            dbAngleManager = new Database(PATH_ANGLE);
+
+            // read old json data & update to new json
+            AngleModel angleJson = dbAngleManager.ReadAngle();
+            angleJson.TestId = nTest.Id;
+            angleJson.UserId = nTest.UserId;
+            angleJson.TestName = nTest.TestName;
+
+            // update TestJson file
             _testReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
             _testReadFile[UserModel.Id.ToString()].Add(TestSelected.Id.ToString(), nTest);
-            WriteTest(_testReadFile);
+            dbTestManager.WriteJson(_testReadFile);
 
+            // update angle file
+            dbAngleManager.WriteJson(angleJson);
             MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");
         }
-        private void AddTest(object sender, RoutedEventArgs e)
-        {
-            DateTime currentTime = DateTime.Now;
 
+        private void Insert(object sender, RoutedEventArgs e)
+        {
+            // calculate value
+            DateTime currentTime = DateTime.Now;
+            List<int> fMax = new List<int>();
+            foreach (var index in _testSelectedByUserID)
+            {
+                fMax.Add(index.Value.Id);
+            }
+
+            int max = 0;
+            if (fMax.Count > 0)
+            {
+                max = FindMax(fMax);
+            }
+
+            // map to TestModel
             TestModel addTest = new TestModel()
             {
-                Id = _testSelectedByUserID.Count + 1,
-                TestName = UserModel.FirstName+"_"+UserModel.LastName+"_"+(_testSelectedByUserID.Count + 1),
+                Id = max + 1,
+                TestName = UserModel.FirstName+"_"+UserModel.LastName+"_"+(max + 1),
                 UserId = UserModel.Id,
                 Date = currentTime.ToString("dd/MM/yyyy"),
-                Time = currentTime.ToString("hh:mm tt")
+                Time = currentTime.ToString("HH:mm")
             };
 
-            _testReadFile[UserModel.Id.ToString()].Add(addTest.Id.ToString(),addTest);
-            WriteTest(_testReadFile);
+            // create path from TestModel info
+            string PATH_ANGLE_INSERT = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + addTest.TestName+".json");
+            dbAngleManager = new Database(PATH_ANGLE_INSERT);
 
-            AngleModel newAngle = new AngleModel() {
+            // write test file
+            _testReadFile[UserModel.Id.ToString()].Add(addTest.Id.ToString(),addTest);
+            dbTestManager.WriteJson(_testReadFile);
+
+            // create angle file by TestModel info
+            AngleModel newAngle = new AngleModel()
+            {
+                UserId = UserModel.Id,
+                TestId = addTest.Id,
+                TestName = addTest.TestName,
                 Angle = new Dictionary<string, Angle>(),
             };
-            _angleReadFile[UserModel.Id.ToString()].Add(addTest.Id.ToString(), newAngle);
-            WriteAngle(_angleReadFile);
 
+            // write angle file
+            dbAngleManager.WriteJson(newAngle);
+
+            // clear value
             test.Clear();
 
             _testSelectedByUserID.Clear();
             _testReadFile.Clear();
-            _angleReadFile.Clear();
 
-            _testReadFile = ReadTest();
-            _angleReadFile = ReadAngle();
+            // reload value
+            _testReadFile = dbTestManager.ReadTest();
 
+            // update ui
             LoadTest(UserModel);
             refreshTest();
         }
+
         private void Delete(object sender, RoutedEventArgs e)
         {
             TestSelected = dgTest.SelectedItem as TestModel;
-
             if(TestSelected == null)
             {
                 return;
             }
 
+            // delete test
             _testReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
-            WriteTest(_testReadFile);
+            dbTestManager.WriteJson(_testReadFile);
 
-            _angleReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
-            WriteAngle(_angleReadFile);
+            string PATH_ANGLE_DELETE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + TestSelected.TestName + ".json");
 
+            // delete angle
+            if (File.Exists(PATH_ANGLE_DELETE))
+            {   
+                File.Delete(PATH_ANGLE_DELETE);
+            }
+
+            // clear value
             test.Clear();
 
             _testSelectedByUserID.Clear();
             _testReadFile.Clear();
-            _angleReadFile.Clear();
 
-            _testReadFile = ReadTest();
-            _angleReadFile = ReadAngle();
+            // reload value
+            _testReadFile = dbTestManager.ReadTest();
 
+            // update ui
             LoadTest(UserModel);
             refreshTest();
         }
+
         private void Selected(object sender, RoutedEventArgs e)
         {
             TestSelected = dgTest.SelectedItem as TestModel;
@@ -146,8 +205,22 @@ namespace BodyPosition.MVVM.View
             {
                 return;
             }
-            NavigationService.Navigate(new HomeView(UserModel, TestSelected));
+
+            string PATH_ANGLE_SELECT = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\"+TestSelected.TestName+".json");
+            NavigationService.Navigate(new HomeView(UserModel, TestSelected , PATH_ANGLE_SELECT));
         }
+
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            if (NavigationService.CanGoBack)
+            {
+                NavigationService.GoBack();
+            }
+        }
+
+        #endregion
+
+        #region Method
         private void LoadTest(UserModel userModel)
         {
             _testSelectedByUserID = _testReadFile[userModel.Id.ToString()];
@@ -157,44 +230,31 @@ namespace BodyPosition.MVVM.View
                 test.Add(_testSelectedByUserID[ts.Value.Id.ToString()]);
             }
         }
+
         private void refreshTest()
         {
             dgTest.ItemsSource = null;
             dgTest.ItemsSource = test;
         }
-        private void Back_Click(object sender, RoutedEventArgs e)
+
+        private int FindMax(List<int> list)
         {
-            if (NavigationService.CanGoBack)
+            if (list.Count == 0)
             {
-                NavigationService.GoBack();
+                throw new InvalidOperationException("Empty list");
             }
+            int max = int.MinValue;
+            foreach (var type in list)
+            {
+                if (type > max)
+                {
+                    max = type;
+                }
+            }
+            return max;
         }
-        #region json method
-        private Dictionary<string, Dictionary<string, TestModel>> ReadTest()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json")));
-            var testModel = TestModel.FromJson(json.ToString());
-            return testModel;
-        }
-
-        private void WriteTest(Dictionary<string, Dictionary<string, TestModel>> test)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json"), test.ToJson());
-        }
-
-        private Dictionary<string, Dictionary<string, AngleModel>> ReadAngle()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json")));
-            var angleModel = AngleModel.FromJson(json.ToString());
-            return angleModel;
-        }
-
-        private void WriteAngle(Dictionary<string, Dictionary<string, AngleModel>> angle)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json"), angle.ToJson());
-        }
-
 
         #endregion
+
     }
 }

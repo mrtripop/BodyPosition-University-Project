@@ -1,14 +1,17 @@
 ﻿
-using BodyPosition.MVVM.Model.AngleModel;
+using BodyPosition.Core;
 using BodyPosition.MVVM.Model.TestModel;
 using BodyPosition.MVVM.Model.UserModel;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Navigation;
+using Excel= Microsoft.Office.Interop.Excel;
 
 namespace BodyPosition.MVVM.View
 {
@@ -30,7 +33,12 @@ namespace BodyPosition.MVVM.View
 
         private Dictionary<string, Dictionary<string, TestModel>> _testReadFile = new Dictionary<string, Dictionary<string, TestModel>>();
 
-        private Dictionary<string, Dictionary<string, AngleModel>> _angleReadFile = new Dictionary<string, Dictionary<string, AngleModel>>();
+        private Database dbUserManager;
+        private Database dbTestManager;
+
+        private string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
+        private string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+
         #endregion
 
         #region Initialize
@@ -38,9 +46,11 @@ namespace BodyPosition.MVVM.View
         {
             InitializeComponent();
 
-            _userReadFile = ReadJson();
-            _testReadFile = ReadTest();
-            _angleReadFile = ReadAngle();
+            dbUserManager = new Database(PATH_USER);
+            dbTestManager = new Database(PATH_TEST);
+
+            _userReadFile = dbUserManager.ReadUser();
+            _testReadFile = dbTestManager.ReadTest();
 
             LoadUser();
             refreshList();
@@ -57,7 +67,7 @@ namespace BodyPosition.MVVM.View
         }
         private void LoadUser()
         {
-            foreach(var i in _userReadFile)
+            foreach (var i in _userReadFile)
             {
                 users.Add(i.Value);
             }
@@ -74,6 +84,7 @@ namespace BodyPosition.MVVM.View
             }
             NavigationService.Navigate(new TestSelectionView(UserSelected));
         }
+
         private void Delete(object sender, RoutedEventArgs e)
         {
             // ตั้งตัวแปรรับค่าที่เลือกมาเป็น UserModel
@@ -83,27 +94,32 @@ namespace BodyPosition.MVVM.View
                 return;
             }
 
+            // remove user
             users.Remove(UserSelected);
+
+            // delete user
             _userReadFile.Remove(UserSelected.Id.ToString());
-            WriteFile(_userReadFile);
+            dbUserManager.WriteJson(_userReadFile);
 
+            // delete test
             _testReadFile.Remove(UserSelected.Id.ToString());
-            WriteTest(_testReadFile);
+            dbTestManager.WriteJson(_testReadFile);
 
-            _angleReadFile.Remove(UserSelected.Id.ToString());
-            WriteAngle(_angleReadFile);
-            
+            // delete angle
+
+
+            // clear value
             users.Clear();
-
             _userReadFile.Clear();
             _testReadFile.Clear();
-            _angleReadFile.Clear();
 
-            _userReadFile = ReadJson();
+            // reload value
+            _userReadFile = dbUserManager.ReadUser();
 
             LoadUser();
             refreshList();
         }
+
         private void Update(object sender, RoutedEventArgs e)
         {
             UserSelected = dgUsers.SelectedItem as UserModel;
@@ -117,11 +133,13 @@ namespace BodyPosition.MVVM.View
 
             users.Clear();
             _userReadFile.Clear();
-            _userReadFile = ReadJson();
+
+            _userReadFile = dbUserManager.ReadUser();
             LoadUser();
             refreshList();
 
         }
+
         private void AddUser(object sender, RoutedEventArgs e)
         {
             RegisterPage regis = new RegisterPage();
@@ -131,82 +149,135 @@ namespace BodyPosition.MVVM.View
 
             _userReadFile.Clear();
 
-            _userReadFile = ReadJson();
-            
+            _userReadFile = dbUserManager.ReadUser();
+
             LoadUser();
             refreshList();
         }
+
         private void Search(object sender, RoutedEventArgs e)
         {
-            if(searchTextBox.Text != "" )
+            if (searchTextBox.Text != "")
             {
                 int b = int.Parse(searchTextBox.Text);
-                if (b <= _userReadFile.Count && b >0)
+
+                List<UserModel> searchUser = new List<UserModel>();
+
+                foreach (var index in _userReadFile)
                 {
-                    List<UserModel> searchUser = new List<UserModel>();
-                    string a = searchTextBox.Text.ToString();
-
-                    searchUser.Add(_userReadFile[a]);
-
-                    dgUsers.ItemsSource = null;
-                    dgUsers.ItemsSource = searchUser;
+                    if (index.Value.Id == b)
+                    {
+                        searchUser.Add(_userReadFile[b.ToString()]);
+                    }
                 }
-                else
-                {
-                    users.Clear();
-                    _userReadFile.Clear();
 
-                    _userReadFile = ReadJson();
-                    MessageBox.Show("ไม่พบเลข ID ที่คุณต้องการ");
+                dgUsers.ItemsSource = null;
+                dgUsers.ItemsSource = searchUser;
 
-                    LoadUser();
-                    refreshList();
-                }
+                searchTextBox.Clear();
+
             }
             else
             {
                 users.Clear();
                 _userReadFile.Clear();
 
-                _userReadFile = ReadJson();
+                _userReadFile = dbUserManager.ReadUser();
 
                 LoadUser();
                 refreshList();
+
+                searchTextBox.Clear();
+            }
+        }
+
+        private void ExportUser(object sender, RoutedEventArgs e)
+        {
+            exportUserButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x00, 0x66));
+            exportUserButton.Content = "Exporting...";
+
+            var sfd = new SaveFileDialog();
+            sfd.Filter = "Excel|*.xls|All files|*.*";
+            sfd.Title = "Export Member";
+            sfd.FileName = "Member";
+
+            if (sfd.ShowDialog() == true)
+            {
+                Excel.Application xlApp;
+                Excel.Workbook xlWorkBook;
+                Excel.Worksheet xlWorkSheet;
+                object misValue = System.Reflection.Missing.Value;
+
+                xlApp = new Excel.Application();
+                xlWorkBook = xlApp.Workbooks.Add(misValue);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+                string data = String.Empty;
+
+                int i = 0;
+                int j = 0;
+
+                xlWorkSheet.Cells[1, 1] = "UserID";
+                xlWorkSheet.Cells[1, 2] = "Firstname";
+                xlWorkSheet.Cells[1, 3] = "Lastname";
+                xlWorkSheet.Cells[1, 4] = "Gender";
+                xlWorkSheet.Cells[1, 5] = "Age";
+                xlWorkSheet.Cells[1, 6] = "Weight";
+                xlWorkSheet.Cells[1, 7] = "Height";
+                xlWorkSheet.Cells[1, 8] = "Phone";
+                xlWorkSheet.Cells[1, 9] = "Date";
+                xlWorkSheet.Cells[1, 10] = "Time";
+
+                foreach (var row in _userReadFile.Values)
+                {
+                    xlWorkSheet.Cells[i + 2, j + 1] = row.Id;
+                    xlWorkSheet.Cells[i + 2, j + 2] = row.FirstName;
+                    xlWorkSheet.Cells[i + 2, j + 3] = row.LastName;
+                    xlWorkSheet.Cells[i + 2, j + 4] = row.Gender;
+                    xlWorkSheet.Cells[i + 2, j + 5] = row.Age;
+                    xlWorkSheet.Cells[i + 2, j + 6] = row.Weight;
+                    xlWorkSheet.Cells[i + 2, j + 7] = row.Height;
+                    xlWorkSheet.Cells[i + 2, j + 8] = row.Tel;
+                    xlWorkSheet.Cells[i + 2, j + 9] = row.Date;
+                    xlWorkSheet.Cells[i + 2, j + 10] = row.Time;
+
+                    i++;
+                }
+
+                xlWorkBook.SaveAs(sfd.FileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+
+                MessageBox.Show("นำออกเป็น Excel ไฟล์สำเร็จ สามารถตรวจได้ที่ " + sfd.FileName);
+
+                releaseObject(xlWorkSheet);
+                releaseObject(xlWorkBook);
+                releaseObject(xlApp);
+            }
+            exportUserButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
+            exportUserButton.Content = "Export";
+        }
+
+        private static void releaseObject(object obj)
+        {
+            try
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                obj = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                obj = null;
+            }
+            finally
+            {
+                GC.Collect();
             }
         }
         #endregion
 
-        #region json method
-        private Dictionary<string, UserModel> ReadJson()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json")));
-            var userModel = UserModel.FromJson(json.ToString());
-            return userModel;
-        }
-        private void WriteFile(Dictionary<string, UserModel> user)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json"), user.ToJson());
-        }
-        private Dictionary<string, Dictionary<string, TestModel>> ReadTest()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json")));
-            var testModel = TestModel.FromJson(json.ToString());
-            return testModel;
-        }
-        private void WriteTest(Dictionary<string, Dictionary<string, TestModel>> test)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json"), test.ToJson());
-        }
-        private Dictionary<string, Dictionary<string, AngleModel>> ReadAngle()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json")));
-            var angleModel = AngleModel.FromJson(json.ToString());
-            return angleModel;
-        }
-        private void WriteAngle(Dictionary<string, Dictionary<string, AngleModel>> angle)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json"), angle.ToJson());
-        }
-        #endregion
+        
+
     }
 }

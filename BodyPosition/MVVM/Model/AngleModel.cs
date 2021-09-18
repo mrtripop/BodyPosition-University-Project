@@ -2,7 +2,7 @@
 //
 // To parse this JSON data, add NuGet 'Newtonsoft.Json' then do:
 //
-//    using BodyPosition.Core;
+//    using BodyPosition.MVVM.Model.AngleModel;
 //
 //    var angleModel = AngleModel.FromJson(jsonString);
 
@@ -17,6 +17,15 @@ namespace BodyPosition.MVVM.Model.AngleModel
 
     public partial class AngleModel
     {
+        [JsonProperty("userID")]
+        public int UserId { get; set; }
+
+        [JsonProperty("testID")]
+        public int TestId { get; set; }
+
+        [JsonProperty("testName")]
+        public string TestName { get; set; }
+
         [JsonProperty("angle")]
         public Dictionary<string, Angle> Angle { get; set; }
     }
@@ -47,12 +56,12 @@ namespace BodyPosition.MVVM.Model.AngleModel
 
     public partial class AngleModel
     {
-        public static Dictionary<string, Dictionary<string, AngleModel>> FromJson(string json) => JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, AngleModel>>>(json, Converter.Settings);
+        public static AngleModel FromJson(string json) => JsonConvert.DeserializeObject<AngleModel>(json, BodyPosition.MVVM.Model.AngleModel.Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this Dictionary<string, Dictionary<string, AngleModel>> self) => JsonConvert.SerializeObject(self, Converter.Settings);
+        public static string ToJson(this AngleModel self) => JsonConvert.SerializeObject(self, BodyPosition.MVVM.Model.AngleModel.Converter.Settings);
     }
 
     internal static class Converter

@@ -35,6 +35,9 @@
 
         [JsonProperty("time")]
         public string Time { get; set; }
+
+        [JsonProperty("age")]
+        public int Age { get; set; }
     }
 
     public partial class UserModel

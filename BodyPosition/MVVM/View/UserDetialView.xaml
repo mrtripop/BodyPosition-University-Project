@@ -90,7 +90,14 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0" Height="25"
-                            HorizontalAlignment="Center"/>
+                            HorizontalAlignment="Center" Width="600">
+                    <TextBlock Text="Age" VerticalAlignment="Center"
+                               Width="100"/>
+
+                    <TextBox x:Name="age" 
+                             Width="175" IsEnabled="False"/>
+                    
+                </StackPanel>
 
 
 

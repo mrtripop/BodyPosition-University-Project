@@ -1,4 +1,5 @@
-﻿using BodyPosition.MVVM.Model.UserModel;
+﻿using BodyPosition.Core;
+using BodyPosition.MVVM.Model.UserModel;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace BodyPosition.MVVM.View
     public partial class UserDetialView : Window
     {
         private UserModel _user;
-        State state;
+        private State state;
 
         private Dictionary<string, UserModel> _userDic = new Dictionary<string, UserModel>();
         public enum State
@@ -32,24 +33,42 @@ namespace BodyPosition.MVVM.View
             done = 2,
         }
 
+        private Database dbUserManager;
+        private string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
+
         public UserDetialView(UserModel user)
         {
             InitializeComponent();
 
+            dbUserManager = new Database(PATH_USER);
+
             _user = user;
-            _userDic = ReadJson();
+            _userDic = dbUserManager.ReadUser();
 
             state = State.done;
 
             firstName.Text = _user.FirstName;
             lastName.Text = _user.LastName;
-            gender.SelectedItem = _user.Gender;
+            gender.SelectedIndex = ComboIndex(_user.Gender);
             phone.Text = _user.Tel;
             weight.Text = _user.Weight.ToString();
             height.Text = _user.Height.ToString();
             date.Text = _user.Date;
             time.Text = _user.Time;
+            age.Text = _user.Age.ToString();
             
+        }
+
+        private int ComboIndex(string d)
+        {
+            if (d == "Male")
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
         }
 
         private void EditUserInfo(object sender, RoutedEventArgs e)
@@ -80,6 +99,7 @@ namespace BodyPosition.MVVM.View
             height.IsEnabled = true;
             date.IsEnabled = true;
             time.IsEnabled = true;
+            age.IsEnabled = true;
         }
 
         private void CloseEditData()
@@ -92,6 +112,7 @@ namespace BodyPosition.MVVM.View
             height.IsEnabled = false;
             date.IsEnabled = false;
             time.IsEnabled = false;
+            age.IsEnabled = false;
         }
 
         private void SaveData()
@@ -112,12 +133,13 @@ namespace BodyPosition.MVVM.View
                 Gender = gUser,
                 Tel = phone.Text,
                 Date = date.Text,
-                Time = time.Text
+                Time = time.Text,
+                Age = int.Parse(age.Text)
             };
 
             _userDic.Remove(_user.Id.ToString());
             _userDic.Add(_user.Id.ToString(), nUser);
-            WriteFile(_userDic);
+            dbUserManager.WriteJson(_userDic);
             
             CloseEditData();
             MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");
@@ -125,16 +147,6 @@ namespace BodyPosition.MVVM.View
             this.Close();
         }
 
-        private Dictionary<string, UserModel> ReadJson()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json")));
-            var userModel = UserModel.FromJson(json.ToString());
-            return userModel;
-        }
-        private void WriteFile(Dictionary<string, UserModel> user)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json"), user.ToJson());
-        }
         private void Cancel(object sender, RoutedEventArgs e)
         {
             this.Close();

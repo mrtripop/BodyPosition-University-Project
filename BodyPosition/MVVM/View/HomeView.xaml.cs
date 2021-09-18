@@ -15,6 +15,7 @@ using System;
 using Microsoft.Kinect.Tools;
 using System.Windows.Media.Media3D;
 using System.Diagnostics;
+using BodyPosition.Core;
 
 namespace BodyPosition.MVVM.View
 {
@@ -43,38 +44,38 @@ namespace BodyPosition.MVVM.View
             set { myTestModelHome = value; }
         }
 
-        private Dictionary<string, Dictionary<string, AngleModel>> _angleReadFile = new Dictionary<string, Dictionary<string, AngleModel>>();
+        AngleModel _angleReadFile = new AngleModel();
 
         SolidColorBrush redColor = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x00, 0x66));
         SolidColorBrush blueColor = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
 
         private double durationLeft;
         private double durationRight;
-
         private int counter = 0;
-
         private bool recordingState = false;
-        //private bool bodyEntered = true;
 
         KinectManager km = KinectManager.Instance;
-
         private Stopwatch sw;
+
+        private Database dbAngleManager;
 
         #endregion
 
         #region Initialize
-        public HomeView(UserModel userModelHome, TestModel testModelHome)
+        public HomeView(UserModel userModelHome, TestModel testModelHome, string path_angle_select)
         {
             InitializeComponent();
+
+            dbAngleManager = new Database(path_angle_select);
 
             UserModelHome = userModelHome;
             TestModelHome = testModelHome;
 
-            _angleReadFile = ReadAngle();
-
             userUID.Text = UserModelHome.Id.ToString();
             userName.Text = UserModelHome.FirstName + " " + UserModelHome.LastName;
             testName.Text = TestModelHome.TestName;
+
+            _angleReadFile = dbAngleManager.ReadAngle();
 
             _sensor = KinectSensor.GetDefault();
 
@@ -181,9 +182,7 @@ namespace BodyPosition.MVVM.View
         private void RecordJoint()
         {
             if (recordingState)
-            //if (recordingState)
             {
-                Console.WriteLine("counter: " + counter);
                 counter++;
 
                 Angle newAngle = new Angle()
@@ -197,24 +196,18 @@ namespace BodyPosition.MVVM.View
                     Ankle = angleAnkle.Angle
                 };
 
-                _angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
+                _angleReadFile.Angle.Add(counter.ToString(), newAngle);
             }
         }
-        private void Save()
+        private void Save(AngleModel angleList)
         {
-            if (_angleReadFile.Count > 0)
-            {
-                WriteAngle(_angleReadFile);
-                MessageBox.Show("บันทึกข้อมูลสำเร็จ");
-            }
-            _angleReadFile.Clear();
+            dbAngleManager.WriteJson(angleList);
+            MessageBox.Show("บันทึกข้อมูลสำเร็จ");
+            angleList.Angle.Clear();
         }
         #endregion
 
         #region Event Method
-        int color = 0;
-        int bd = 0;
-        int bdn = 0;
 
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
@@ -225,13 +218,6 @@ namespace BodyPosition.MVVM.View
             {
                 if (frame != null)
                 {
-                    if (recordingState)
-                    {
-                        Console.WriteLine("color: " + color);
-                        color++;
-                    }
-
-
                     if (viewer.Visualization == Visualization.Color)
                     {
                         viewer.Image = frame.ToBitmap();
@@ -244,13 +230,6 @@ namespace BodyPosition.MVVM.View
             {
                 if (frame != null)
                 {
-                    if (recordingState)
-                    {
-                        Console.WriteLine("bd: " + bd);
-                        bd++;
-                    }
-
-
                     var bodies = frame.Bodies();
                     _playersController.Update(bodies);
 
@@ -258,13 +237,6 @@ namespace BodyPosition.MVVM.View
 
                     if (body != null)
                     {
-                        if (recordingState)
-                        {
-                            Console.WriteLine("bdn: " + bdn);
-                            bdn++;
-                        }
-
-
                         //วาดกระดูก
                         viewer.DrawBody(body);
                         //คำนวณองศา
@@ -306,7 +278,7 @@ namespace BodyPosition.MVVM.View
         #region Button Event Method
         private void Record(object sender, RoutedEventArgs e)
         {
-            if (_angleReadFile[UserModelHome.Id.ToString()][TestModelHome.Id.ToString()].Angle.Count > 0 && recordingState == false)
+            if (_angleReadFile.Angle.Count > 0 && recordingState == false)
             {
                 MessageBox.Show("การทดสอบนี้มีข้อมูลถูกบันทึกไว้อยู่แล้ว");
                 return;
@@ -346,7 +318,7 @@ namespace BodyPosition.MVVM.View
                 sw.Restart();
                 km.RecordingStateChanged += RecordingState;
 
-                Save();
+                Save(_angleReadFile);
 
                 recordButton.Background = blueColor;
                 recordButton.Content = "Record";
@@ -355,7 +327,11 @@ namespace BodyPosition.MVVM.View
         }
         private void OpenDatabaseView(object sender, RoutedEventArgs e)
         {
-            DatabaseView bdv = new DatabaseView(UserModelHome, TestModelHome);
+            //read angle
+            AngleModel sdbv = new AngleModel();
+            sdbv = dbAngleManager.ReadAngle();
+
+            DatabaseView bdv = new DatabaseView(UserModelHome, TestModelHome, sdbv, dbAngleManager.path);
             bdv.Show();
         }
         private void Page_Unloaded(object sender, RoutedEventArgs e)
@@ -399,18 +375,5 @@ namespace BodyPosition.MVVM.View
         }
         #endregion
 
-        #region Json Method
-        private Dictionary<string, Dictionary<string, AngleModel>> ReadAngle()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json")));
-            var angleModel = AngleModel.FromJson(json.ToString());
-            return angleModel;
-        }
-
-        private void WriteAngle(Dictionary<string, Dictionary<string, AngleModel>> angle)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json"), angle.ToJson());
-        }
-        #endregion
     }
 }

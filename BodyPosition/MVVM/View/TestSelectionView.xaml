@@ -56,7 +56,7 @@
                         <Button Width="70"
                                     Height="40"
                                     Style="{StaticResource ButtonTheme}"
-                                    Click="AddTest">
+                                    Click="Insert">
                             เพิ่ม
                         </Button>
 
@@ -90,7 +90,7 @@
 
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="220" />
-                    <DataGridTextColumn Header="User ID" Binding="{Binding UserId}" Width="150" />
+                    <DataGridTextColumn Header="User ID" Binding="{Binding UserId}" Width="150" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="150" />
                     <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="150" />
 

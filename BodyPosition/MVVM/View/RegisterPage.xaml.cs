@@ -1,4 +1,5 @@
-﻿using BodyPosition.MVVM.Model.AngleModel;
+﻿using BodyPosition.Core;
+using BodyPosition.MVVM.Model.AngleModel;
 using BodyPosition.MVVM.Model.TestModel;
 using BodyPosition.MVVM.Model.UserModel;
 using Newtonsoft.Json.Linq;
@@ -24,6 +25,7 @@ namespace BodyPosition.MVVM.View
         private double HeightUser;
         private string Date;
         private string Time;
+        private int Age;
 
         private DateTime currentTime = DateTime.Now;
         private DateTime selectDateTime;
@@ -32,16 +34,38 @@ namespace BodyPosition.MVVM.View
 
         private Dictionary<string, Dictionary<string, TestModel>> _testReadList = new Dictionary<string, Dictionary<string, TestModel>>();
 
-        private Dictionary<string, Dictionary<string, AngleModel>> _angleReadList = new Dictionary<string, Dictionary<string, AngleModel>>();
+        private string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
+        private string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+
+        private Database dbUserManager;
+        private Database dbTestManager;
 
         public RegisterPage()
         {
             InitializeComponent();
 
-            _userReadList = ReadFile();
-            _testReadList = ReadTest();
-            _angleReadList = ReadAngle();
+            dbUserManager = new Database(PATH_USER);
+            dbTestManager = new Database(PATH_TEST);
 
+            _userReadList = dbUserManager.ReadUser();
+            _testReadList = dbTestManager.ReadTest();
+        }
+
+        public int FindMax(List<int> list)
+        {
+            if (list.Count == 0)
+            {
+                throw new InvalidOperationException("Empty list");
+            }
+            int max = int.MinValue;
+            foreach (var type in list)
+            {
+                if (type > max)
+                {
+                    max = type;
+                }
+            }
+            return max;
         }
 
         private void Save(object sender, RoutedEventArgs e)
@@ -61,15 +85,27 @@ namespace BodyPosition.MVVM.View
             }
             Date = selectDateTime.ToString("dd/MM/yyyy");
             Time = currentTime.ToString("HH:mm");
+            if (age.Text != "")
+            {
+                Age = int.Parse(age.Text);
+            }
+            
 
             // check info
             if (FirstName != "" && LastName != "" && Gender != "" && Phone != "" && weight.Text != "" &&
-                height.Text != "" && Date != "" && Time != "")
+                height.Text != "" && Date != "" && Time != "" && age.Text != "")
             {
+                List<int> fMax = new List<int>();
+                foreach (var index in _userReadList)
+                {
+                    fMax.Add(index.Value.Id);
+                }
+
+                int max = FindMax(fMax);
 
                 UserModel newUser = new UserModel()
                 {
-                    Id = _userReadList.Count + 1,
+                    Id = max + 1,
                     FirstName = FirstName,
                     LastName = LastName,
                     Gender = Gender,
@@ -77,19 +113,16 @@ namespace BodyPosition.MVVM.View
                     Weight = WeightUser,
                     Height = HeightUser,
                     Date = Date,
-                    Time = Time
+                    Time = Time,
+                    Age = Age,
                 };
 
                 _userReadList.Add(newUser.Id.ToString(), newUser);
-                WriteFile(_userReadList);
+                dbUserManager.WriteJson(_userReadList);
 
                 Dictionary<string, TestModel> newTest = new Dictionary<string, TestModel>();
                 _testReadList.Add(newUser.Id.ToString(), newTest);
-                WriteTest(_testReadList);
-
-                Dictionary<string, AngleModel> newAngle = new Dictionary<string, AngleModel>();
-                _angleReadList.Add(newUser.Id.ToString(), newAngle);
-                WriteAngle(_angleReadList);
+                dbTestManager.WriteJson(_testReadList);
 
                 MessageBox.Show("บันทึกสำเร็จ");
                 this.Close();
@@ -100,51 +133,11 @@ namespace BodyPosition.MVVM.View
             }
         }
 
-        #region json method
-        private Dictionary<string,UserModel> ReadFile()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json")));
-            var userModel = UserModel.FromJson(json.ToString());
-            return userModel;
-        }
-
-        private void WriteFile(Dictionary<string, UserModel> user)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json"), user.ToJson());
-        }
-
-        private Dictionary<string, Dictionary<string, TestModel>> ReadTest()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json")));
-            var testModel = TestModel.FromJson(json.ToString());
-            return testModel;
-        }
-
-        private void WriteTest(Dictionary<string, Dictionary<string, TestModel>> test)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json"), test.ToJson());
-        }
-
-        private Dictionary<string, Dictionary<string, AngleModel>> ReadAngle()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json")));
-            var angleModel = AngleModel.FromJson(json.ToString());
-            return angleModel;
-        }
-
-        private void WriteAngle(Dictionary<string, Dictionary<string, AngleModel>> angle)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json"), angle.ToJson());
-        }
-
-        #endregion
-
         private void Cancel(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-
-        private void date_SelectedDateChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void date_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             DateTime newDate = (DateTime)(((DatePicker)sender).SelectedDate);
             selectDateTime = newDate;

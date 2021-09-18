@@ -11,6 +11,9 @@ using System.Windows.Media;
 using Microsoft.Win32;
 using System.Data;
 using System.Data.OleDb;
+using Newtonsoft.Json;
+using System.Runtime.InteropServices;
+using BodyPosition.Core;
 
 namespace BodyPosition.MVVM.View
 {
@@ -20,6 +23,7 @@ namespace BodyPosition.MVVM.View
     public partial class DatabaseView : Window
     {
         #region Parameter
+
         private UserModel _userModelDB;
         public UserModel UserModelDB
         {
@@ -43,41 +47,47 @@ namespace BodyPosition.MVVM.View
 
         private List<Angle> angle = new List<Angle>();
 
-        private Dictionary<string, Dictionary<string, AngleModel>> _angleReadFile = new Dictionary<string, Dictionary<string, AngleModel>>();
+        private string PATH_TEST_SELECTED;
 
-        private Dictionary<string, Dictionary<string, AngleModel>> exportData = new Dictionary<string, Dictionary<string, AngleModel>>();
+        private Database dbAngleMAnager;
+
+        private int count = 0;
+
         #endregion
 
-        #region Initialize
-        public DatabaseView(UserModel user, TestModel test)
+        public DatabaseView(UserModel user, TestModel test, AngleModel angleList, string path_test_selected)
         {
             InitializeComponent();
 
             UserModelDB = user;
             TestModelDB = test;
 
-            _angleReadFile = ReadAngle();
-            exportData = _angleReadFile;
+            PATH_TEST_SELECTED = path_test_selected;
+
+            dbAngleMAnager = new Database(PATH_TEST_SELECTED);
+
+            _angleModelDB = angleList;
+
+            count = angleList.Angle.Count;
 
             LoadAngle();
             refreshDataGrid();
 
         }
 
-        #endregion
-
-        #region Open data table
+        #region Search & Load data
         private void SearchData(object sender, RoutedEventArgs e)
         {
             if (searchTextBlock.Text != "")
             {
                 List<Angle> searchAngle = new List<Angle>();
                 string EventIndex = searchTextBlock.Text.ToString();
-                foreach (var dic in AngleModelDB.Angle)
+
+                foreach (var dic in _angleModelDB.Angle)
                 {
                     if (dic.Key == EventIndex)
                     {
-                        searchAngle.Add(AngleModelDB.Angle[EventIndex]);
+                        searchAngle.Add(_angleModelDB.Angle[EventIndex]);
                     }
                 }
 
@@ -92,11 +102,12 @@ namespace BodyPosition.MVVM.View
                     tblPelvisSideAngle.Text = searchAngle[0].Pelvis.ToString();
                     tblKneeAngle.Text = searchAngle[0].Knee.ToString();
                     tblAnkleAngle.Text = searchAngle[0].Ankle.ToString();
+
+                    searchTextBlock.Clear();
                 }
                 else
                 {
                     angle.Clear();
-                    _angleReadFile.Clear();
 
                     tblPelvisFront.Text = "";
                     tblShoulderRight.Text = "";
@@ -105,17 +116,17 @@ namespace BodyPosition.MVVM.View
                     tblKneeAngle.Text = "";
                     tblAnkleAngle.Text = "";
 
-                    _angleReadFile = ReadAngle();
                     MessageBox.Show("ไม่พบเลข ID ที่คุณต้องการ");
 
                     LoadAngle();
                     refreshDataGrid();
+
+                    searchTextBlock.Clear();
                 }
             }
             else
             {
                 angle.Clear();
-                _angleReadFile.Clear();
 
                 tblPelvisFront.Text = "";
                 tblShoulderRight.Text = "";
@@ -124,21 +135,21 @@ namespace BodyPosition.MVVM.View
                 tblKneeAngle.Text = "";
                 tblAnkleAngle.Text = "";
 
-                _angleReadFile = ReadAngle();
-
                 LoadAngle();
                 refreshDataGrid();
+
+                searchTextBlock.Clear();
             }
         }
+
         private void LoadAngle()
         {
-            _angleModelDB = _angleReadFile[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()];
-
-            foreach (var dic in AngleModelDB.Angle)
+            foreach (var dic in _angleModelDB.Angle)
             {
                 angle.Add(dic.Value);
             }
         }
+
         private void refreshDataGrid()
         {
             DGAngle.ItemsSource = null;
@@ -147,7 +158,7 @@ namespace BodyPosition.MVVM.View
 
         #endregion
 
-        #region Export to Excel
+        #region Export & Import Excel
 
         private void exportTable(object sender, RoutedEventArgs e)
         {
@@ -156,7 +167,7 @@ namespace BodyPosition.MVVM.View
 
             var sfd = new SaveFileDialog();
             sfd.Filter = "Excel|*.xls|All files|*.*";
-            sfd.Title = "Export Angle "+TestModelDB.TestName;
+            sfd.Title = "Export Angle " + TestModelDB.TestName;
             sfd.FileName = TestModelDB.TestName;
 
             if (sfd.ShowDialog() == true)
@@ -183,7 +194,7 @@ namespace BodyPosition.MVVM.View
                 xlWorkSheet.Cells[1, 6] = "Knee Angle";
                 xlWorkSheet.Cells[1, 7] = "Ankle Angle";
 
-                foreach (var row in exportData[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()].Angle)
+                foreach (var row in _angleModelDB.Angle)
                 {
                     xlWorkSheet.Cells[i + 2, j + 1] = row.Value.Id;
                     xlWorkSheet.Cells[i + 2, j + 2] = row.Value.FrontPelvis;
@@ -199,7 +210,7 @@ namespace BodyPosition.MVVM.View
                 xlWorkBook.Close(true, misValue, misValue);
                 xlApp.Quit();
 
-                MessageBox.Show("นำออกเป็น Excel ไฟล์สำเร็จ สามารถตรวจได้ที่ Document โฟลเดอร์");
+                MessageBox.Show("นำออกเป็น Excel ไฟล์สำเร็จ สามารถตรวจได้ที่ " + sfd.FileName);
 
                 releaseObject(xlWorkSheet);
                 releaseObject(xlWorkBook);
@@ -208,6 +219,7 @@ namespace BodyPosition.MVVM.View
             exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
             exportButton.Content = "Export";
         }
+
         private static void releaseObject(object obj)
         {
             try
@@ -225,27 +237,17 @@ namespace BodyPosition.MVVM.View
                 GC.Collect();
             }
         }
-        #endregion
 
-        #region Json Method
-        private Dictionary<string, Dictionary<string, AngleModel>> ReadAngle()
-        {
-            JObject json = JObject.Parse(File.ReadAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json")));
-            var angleModel = AngleModel.FromJson(json.ToString());
-            return angleModel;
-        }
-        private void WriteAngle(Dictionary<string, Dictionary<string, AngleModel>> angle)
-        {
-            File.WriteAllText(Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\AngleJson.json"), angle.ToJson());
-        }
-
-        #endregion
-
-        #region Read Excel
         private void ImportTable(object sender, RoutedEventArgs e)
         {
-            exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x00, 0x66));
-            exportButton.Content = "Importing...";
+            if(count > 0)
+            {
+                MessageBox.Show("มีข้อมูลอยู่ภายในระบบแล้ว");
+                return;
+            }
+
+            importButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xff, 0x00, 0x66));
+            importButton.Content = "Importing...";
 
             string filePath = string.Empty;
             string fileExt = string.Empty;
@@ -256,34 +258,59 @@ namespace BodyPosition.MVVM.View
 
             if (file.ShowDialog() == true)
             {
-                filePath = file.FileName; 
-                fileExt = Path.GetExtension(filePath); 
+                filePath = file.FileName;
+                fileExt = Path.GetExtension(filePath);
                 if (fileExt.CompareTo(".xls") == 0 || fileExt.CompareTo(".xlsx") == 0)
                 {
                     try
                     {
                         // read data
-                        DataTable dtExcel = new DataTable();
-                        dtExcel = ReadExcel(filePath, fileExt);
+                        Excel.Application xlApp = new Excel.Application();
+                        Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(filePath);
+                        Excel._Worksheet xlWorksheet = xlWorkbook.Sheets[1];
+                        Excel.Range xlRange = xlWorksheet.UsedRange;
 
-                        // push to Angle Model
-                        Angle newAngle = new Angle()
+                        int rowCount = xlRange.Rows.Count;
+                        int colCount = xlRange.Columns.Count;
+
+                        // map to AngleModel
+                        for (int i = 2; i <= rowCount; i++)
                         {
-                            //Id = counter,
-                            //FrontPelvis = anglePelvisFront.Angle,
-                            //RightShoulder = durationRight,
-                            //LeftShoulder = durationLeft,
-                            //Pelvis = angleSidePelvis.Angle,
-                            //Knee = angleKnee.Angle,
-                            //Ankle = angleAnkle.Angle
-                        };
+                            Angle nAngle = new Angle()
+                            {
+                                Id = (int)xlRange.Cells[i, 1].Value2,
+                                FrontPelvis = (double)xlRange.Cells[i, 2].Value2,
+                                LeftShoulder = (double)xlRange.Cells[i, 4].Value2,
+                                RightShoulder = (double)xlRange.Cells[i, 3].Value2,
+                                Pelvis = (double)xlRange.Cells[i, 5].Value2,
+                                Ankle = (double)xlRange.Cells[i, 6].Value2,
+                                Knee = (double)xlRange.Cells[i, 7].Value2,
+                            };
 
-                        //_angleReadFile[UserModelDB.Id.ToString()][TestModelDB.Id.ToString()].Angle.Add(counter.ToString(), newAngle);
+                            _angleModelDB.Angle.Add(nAngle.Id.ToString(), nAngle);
+                        }
 
-                        // save to json
+                        //cleanup
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
 
-                        // update view by json data
+                        Marshal.ReleaseComObject(xlRange);
+                        Marshal.ReleaseComObject(xlWorksheet);
 
+                        //close and release
+                        xlWorkbook.Close();
+                        Marshal.ReleaseComObject(xlWorkbook);
+
+                        //quit and release
+                        xlApp.Quit();
+                        Marshal.ReleaseComObject(xlApp);
+
+                        // save data to json
+                        dbAngleMAnager.WriteJson(_angleModelDB);
+                        MessageBox.Show("Import Complete!");
+
+                        LoadAngle();
+                        refreshDataGrid();
                     }
                     catch (Exception ex)
                     {
@@ -292,50 +319,15 @@ namespace BodyPosition.MVVM.View
                 }
                 else
                 {
-                    MessageBox.Show("กรุณาเลือกไฟล์ประเภท Excel"); 
+                    MessageBox.Show("กรุณาเลือกไฟล์ประเภท Excel");
                 }
             }
 
-            exportButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
-            exportButton.Content = "Export";
-        }
-        private IEnumerable<Angle> ConvertToAngle(DataTable dataTable)
-        {
-            foreach (DataRow row in dataTable.Rows)
-            {
-                yield return new Angle
-                {
-                    Id = Convert.ToInt32(row["Event Index"]),
-                    FrontPelvis = Convert.ToDouble(row["Front Pelvis Angle"]),
-                    LeftShoulder = Convert.ToDouble(row["Left Shoulder"]),
-                    RightShoulder = Convert.ToDouble(row["Right Shoulder"]),
-                    Pelvis = Convert.ToDouble(row["Pelvis Angle"]),
-                    Ankle = Convert.ToDouble(row["Knee Angle"]),
-                    Knee = Convert.ToDouble(row["Ankle Angle"])
-                };
-            }
-        }
-
-        public DataTable ReadExcel(string fileName, string fileExt)
-        {
-            string conn = string.Empty;
-            DataTable dtexcel = new DataTable();
-            if (fileExt.CompareTo(".xls") == 0)
-                conn = @"provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + fileName + ";Extended Properties='Excel 8.0;HRD=Yes;IMEX=1';"; //for below excel 2007  
-            else
-                conn = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + fileName + ";Extended Properties='Excel 12.0;HDR=NO';"; //for above excel 2007  
-            using (OleDbConnection con = new OleDbConnection(conn))
-            {
-                try
-                {
-                    OleDbDataAdapter oleAdpt = new OleDbDataAdapter("select * from [Sheet1$]", con); //here we read data from sheet1  
-                    oleAdpt.Fill(dtexcel); //fill excel data into dataTable  
-                }
-                catch { }
-            }
-            return dtexcel;
+            importButton.Background = new SolidColorBrush(Color.FromArgb(0xff, 0x21, 0x96, 0xf3));
+            importButton.Content = "Import";
         }
 
         #endregion
+
     }
 }

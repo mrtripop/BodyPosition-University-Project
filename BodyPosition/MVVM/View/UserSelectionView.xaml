@@ -48,10 +48,20 @@
                             Margin="50,0,0,0">
 
                         <Button Width="70"
-                                    Height="40"
-                                    Style="{StaticResource ButtonTheme}"
-                                    Click="AddUser" Margin="0,5,0,0" VerticalAlignment="Top">
-                            เพิ่ม
+                                Height="40"
+                                Click="AddUser" 
+                                Margin="0,5,0,0" 
+                                VerticalAlignment="Top">
+                            Insert
+                        </Button>
+
+                        <Button Width="80"
+                                Height="40"
+                                Click="ExportUser" 
+                                Margin="10,5,0,0" 
+                                VerticalAlignment="Top"
+                                Name="exportUserButton">
+                            Export
                         </Button>
 
                     </StackPanel>

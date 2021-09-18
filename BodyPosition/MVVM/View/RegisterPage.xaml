@@ -81,6 +81,14 @@
                                Width="100"/>
 
                     <DatePicker x:Name="date" Width="175" SelectedDateChanged="date_SelectedDateChanged"></DatePicker>
+
+                    <TextBlock Text="Age" VerticalAlignment="Center"
+                               Width="100"
+                               Margin="50,0,0,0"/>
+                    
+                    <TextBox x:Name="age" 
+                             Width="175"/>
+                    
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" Margin="0,15,0,0" Height="25"
