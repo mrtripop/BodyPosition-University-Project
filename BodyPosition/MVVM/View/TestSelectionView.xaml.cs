@@ -42,10 +42,15 @@ namespace BodyPosition.MVVM.View
         private Dictionary<string, Dictionary<string, TestModel>> _testReadFile = new Dictionary<string, Dictionary<string, TestModel>>();
 
         private string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+        private string PATH_TEST_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\TestJson.json");
         private string PATH_ANGLE;
+        private string PATH_ANGLE_BACKUP;
 
         private Database dbTestManager;
         private Database dbAngleManager;
+
+        private Database dbTestBackup;
+        private Database dbAngleBackup;
 
         #endregion
 
@@ -54,7 +59,9 @@ namespace BodyPosition.MVVM.View
             InitializeComponent();
 
             UserModel = user_model;
+
             dbTestManager = new Database(PATH_TEST);
+            dbTestBackup = new Database(PATH_TEST_BACKUP);
 
             _testReadFile = dbTestManager.ReadTest();
 
@@ -86,7 +93,10 @@ namespace BodyPosition.MVVM.View
 
             // create path from TestModel info
             PATH_ANGLE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + TestSelected.TestName + ".json");
+            PATH_ANGLE_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + TestSelected.TestName + ".json");
+
             dbAngleManager = new Database(PATH_ANGLE);
+            dbAngleBackup = new Database(PATH_ANGLE_BACKUP);
 
             // read old json data & update to new json
             AngleModel angleJson = dbAngleManager.ReadAngle();
@@ -98,9 +108,12 @@ namespace BodyPosition.MVVM.View
             _testReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
             _testReadFile[UserModel.Id.ToString()].Add(TestSelected.Id.ToString(), nTest);
             dbTestManager.WriteJson(_testReadFile);
+            dbTestBackup.WriteJson(_testReadFile);
 
             // update angle file
             dbAngleManager.WriteJson(angleJson);
+            dbAngleBackup.WriteJson(angleJson);
+
             MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");
         }
 
@@ -132,11 +145,16 @@ namespace BodyPosition.MVVM.View
 
             // create path from TestModel info
             string PATH_ANGLE_INSERT = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + addTest.TestName+".json");
+            string PATH_ANGLE_INSERT_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + addTest.TestName + ".json");
+
             dbAngleManager = new Database(PATH_ANGLE_INSERT);
+            dbAngleBackup = new Database(PATH_ANGLE_INSERT_BACKUP);
 
             // write test file
             _testReadFile[UserModel.Id.ToString()].Add(addTest.Id.ToString(),addTest);
             dbTestManager.WriteJson(_testReadFile);
+
+            dbTestBackup.WriteJson(_testReadFile);
 
             // create angle file by TestModel info
             AngleModel newAngle = new AngleModel()
@@ -149,6 +167,7 @@ namespace BodyPosition.MVVM.View
 
             // write angle file
             dbAngleManager.WriteJson(newAngle);
+            dbAngleBackup.WriteJson(newAngle);
 
             // clear value
             test.Clear();
@@ -175,13 +194,20 @@ namespace BodyPosition.MVVM.View
             // delete test
             _testReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
             dbTestManager.WriteJson(_testReadFile);
+            dbTestBackup.WriteJson(_testReadFile);
 
             string PATH_ANGLE_DELETE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + TestSelected.TestName + ".json");
+            string PATH_ANGLE_DELETE_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + TestSelected.TestName + ".json");
 
             // delete angle
             if (File.Exists(PATH_ANGLE_DELETE))
             {   
                 File.Delete(PATH_ANGLE_DELETE);
+            }
+
+            if (File.Exists(PATH_ANGLE_DELETE_BACKUP))
+            {
+                File.Delete(PATH_ANGLE_DELETE_BACKUP);
             }
 
             // clear value
@@ -207,7 +233,9 @@ namespace BodyPosition.MVVM.View
             }
 
             string PATH_ANGLE_SELECT = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\"+TestSelected.TestName+".json");
-            NavigationService.Navigate(new HomeView(UserModel, TestSelected , PATH_ANGLE_SELECT));
+            string PATH_ANGLE_SELECT_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + TestSelected.TestName + ".json");
+
+            NavigationService.Navigate(new HomeView(UserModel, TestSelected , PATH_ANGLE_SELECT, PATH_ANGLE_SELECT_BACKUP));
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)

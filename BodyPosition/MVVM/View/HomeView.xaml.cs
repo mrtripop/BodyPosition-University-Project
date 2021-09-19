@@ -55,18 +55,19 @@ namespace BodyPosition.MVVM.View
         private bool recordingState = false;
 
         KinectManager km = KinectManager.Instance;
-        private Stopwatch sw;
 
         private Database dbAngleManager;
+        private Database dbAngleBackup;
 
         #endregion
 
         #region Initialize
-        public HomeView(UserModel userModelHome, TestModel testModelHome, string path_angle_select)
+        public HomeView(UserModel userModelHome, TestModel testModelHome, string path_angle_select, string path_backup)
         {
             InitializeComponent();
 
             dbAngleManager = new Database(path_angle_select);
+            dbAngleBackup = new Database(path_backup);
 
             UserModelHome = userModelHome;
             TestModelHome = testModelHome;
@@ -202,6 +203,8 @@ namespace BodyPosition.MVVM.View
         private void Save(AngleModel angleList)
         {
             dbAngleManager.WriteJson(angleList);
+            dbAngleBackup.WriteJson(angleList);
+
             MessageBox.Show("บันทึกข้อมูลสำเร็จ");
             angleList.Angle.Clear();
         }
@@ -297,7 +300,6 @@ namespace BodyPosition.MVVM.View
                     if (sfd.ShowDialog() == true)
                     {
                         km.StartRecording(sfd.FileName);
-                        sw = Stopwatch.StartNew();
                         km.RecordingStateChanged += RecordingState;
 
                         recordButton.Background = redColor;
@@ -314,8 +316,6 @@ namespace BodyPosition.MVVM.View
             else
             {
                 km.StopRecording();
-                sw.Stop();
-                sw.Restart();
                 km.RecordingStateChanged += RecordingState;
 
                 Save(_angleReadFile);
@@ -327,11 +327,10 @@ namespace BodyPosition.MVVM.View
         }
         private void OpenDatabaseView(object sender, RoutedEventArgs e)
         {
-            //read angle
             AngleModel sdbv = new AngleModel();
             sdbv = dbAngleManager.ReadAngle();
 
-            DatabaseView bdv = new DatabaseView(UserModelHome, TestModelHome, sdbv, dbAngleManager.path);
+            DatabaseView bdv = new DatabaseView(UserModelHome, TestModelHome, sdbv, dbAngleManager.path, dbAngleBackup.path);
             bdv.Show();
         }
         private void Page_Unloaded(object sender, RoutedEventArgs e)

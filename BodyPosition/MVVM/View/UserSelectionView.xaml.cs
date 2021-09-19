@@ -11,7 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Navigation;
-using Excel= Microsoft.Office.Interop.Excel;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BodyPosition.MVVM.View
 {
@@ -30,14 +30,19 @@ namespace BodyPosition.MVVM.View
         }
 
         private Dictionary<string, UserModel> _userReadFile = new Dictionary<string, UserModel>();
-
         private Dictionary<string, Dictionary<string, TestModel>> _testReadFile = new Dictionary<string, Dictionary<string, TestModel>>();
 
         private Database dbUserManager;
         private Database dbTestManager;
 
-        private string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
-        private string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+        private Database dbUserBackup;
+        private Database dbTestBackup;
+
+        public readonly string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
+        public readonly string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+
+        public readonly string PATH_USER_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\UserJson.json");
+        public readonly string PATH_TEST_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\TestJson.json");
 
         #endregion
 
@@ -48,6 +53,9 @@ namespace BodyPosition.MVVM.View
 
             dbUserManager = new Database(PATH_USER);
             dbTestManager = new Database(PATH_TEST);
+
+            dbUserBackup = new Database(PATH_USER_BACKUP);
+            dbTestBackup = new Database(PATH_TEST_BACKUP);
 
             _userReadFile = dbUserManager.ReadUser();
             _testReadFile = dbTestManager.ReadTest();
@@ -94,6 +102,10 @@ namespace BodyPosition.MVVM.View
                 return;
             }
 
+            // reload test
+            _testReadFile.Clear();
+            _testReadFile = dbTestManager.ReadTest();
+
             // remove user
             users.Remove(UserSelected);
 
@@ -101,12 +113,31 @@ namespace BodyPosition.MVVM.View
             _userReadFile.Remove(UserSelected.Id.ToString());
             dbUserManager.WriteJson(_userReadFile);
 
+            dbUserBackup.WriteJson(_userReadFile);
+
+            // delete angle file (delete file from folder)
+            foreach (var item in _testReadFile[UserSelected.Id.ToString()].Values)
+            {
+                string PATH_ANGLE_DELETE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + item.TestName + ".json");
+                string PATH_ANGLE_BACKUP_DELETE = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + item.TestName + ".json");
+
+                // delete angle
+                if (File.Exists(PATH_ANGLE_DELETE))
+                {
+                    File.Delete(PATH_ANGLE_DELETE);
+                }
+
+                if (File.Exists(PATH_ANGLE_BACKUP_DELETE))
+                {
+                    File.Delete(PATH_ANGLE_BACKUP_DELETE);
+                }
+            }
+
             // delete test
             _testReadFile.Remove(UserSelected.Id.ToString());
             dbTestManager.WriteJson(_testReadFile);
 
-            // delete angle
-
+            dbTestBackup.WriteJson(_testReadFile);
 
             // clear value
             users.Clear();
@@ -277,7 +308,7 @@ namespace BodyPosition.MVVM.View
         }
         #endregion
 
-        
+
 
     }
 }

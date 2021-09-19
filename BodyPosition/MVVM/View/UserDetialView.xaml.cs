@@ -34,13 +34,17 @@ namespace BodyPosition.MVVM.View
         }
 
         private Database dbUserManager;
+        private Database dbUserBackup;
+
         private string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
+        private string PATH_USER_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\UserJson.json");
 
         public UserDetialView(UserModel user)
         {
             InitializeComponent();
 
             dbUserManager = new Database(PATH_USER);
+            dbUserBackup = new Database(PATH_USER_BACKUP);
 
             _user = user;
             _userDic = dbUserManager.ReadUser();
@@ -139,7 +143,12 @@ namespace BodyPosition.MVVM.View
 
             _userDic.Remove(_user.Id.ToString());
             _userDic.Add(_user.Id.ToString(), nUser);
+
+            // JsonDatabase
             dbUserManager.WriteJson(_userDic);
+
+            // BackupDatabase
+            dbUserBackup.WriteJson(_userDic);
             
             CloseEditData();
             MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");

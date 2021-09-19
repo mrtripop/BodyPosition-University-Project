@@ -39,23 +39,21 @@ namespace BodyPosition.MVVM.View
         }
 
         private AngleModel _angleModelDB;
-        public AngleModel AngleModelDB
-        {
-            get { return _angleModelDB; }
-            set { _angleModelDB = value; }
-        }
+        private AngleModel _angleBackupReader;
 
         private List<Angle> angle = new List<Angle>();
 
-        private string PATH_TEST_SELECTED;
+        private readonly string PATH_TEST_SELECTED;
+        private readonly string PATH_TEST_BACKUP;
 
         private Database dbAngleMAnager;
+        private Database dbAngleBackup;
 
         private int count = 0;
 
         #endregion
 
-        public DatabaseView(UserModel user, TestModel test, AngleModel angleList, string path_test_selected)
+        public DatabaseView(UserModel user, TestModel test, AngleModel angleList, string path_test_selected, string path_test_backup)
         {
             InitializeComponent();
 
@@ -63,8 +61,10 @@ namespace BodyPosition.MVVM.View
             TestModelDB = test;
 
             PATH_TEST_SELECTED = path_test_selected;
+            PATH_TEST_BACKUP = path_test_backup;
 
             dbAngleMAnager = new Database(PATH_TEST_SELECTED);
+            dbAngleBackup = new Database(PATH_TEST_BACKUP);
 
             _angleModelDB = angleList;
 
@@ -307,6 +307,8 @@ namespace BodyPosition.MVVM.View
 
                         // save data to json
                         dbAngleMAnager.WriteJson(_angleModelDB);
+                        dbAngleBackup.WriteJson(_angleModelDB);
+
                         MessageBox.Show("Import Complete!");
 
                         LoadAngle();
@@ -329,5 +331,33 @@ namespace BodyPosition.MVVM.View
 
         #endregion
 
+        private void RecoveryTable(object sender, RoutedEventArgs e)
+        {
+            if (count > 0)
+            {
+                MessageBox.Show("มีข้อมูลอยู่ภายในระบบแล้ว");
+                return;
+            }
+
+            //read backup
+            _angleBackupReader = dbAngleBackup.ReadAngle();
+
+            count = _angleBackupReader.Angle.Count;
+            if (count == 0)
+            {
+                MessageBox.Show("ไม่มีข้อมูลสำรอง");
+                return;
+            }
+
+            //save backup to jsonDatabase
+            dbAngleMAnager.WriteJson(_angleBackupReader);
+            MessageBox.Show("Recovery Complete!");
+
+            //display data
+            _angleModelDB = _angleBackupReader;
+
+            LoadAngle();
+            refreshDataGrid();
+        }
     }
 }

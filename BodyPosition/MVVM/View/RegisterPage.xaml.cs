@@ -31,14 +31,22 @@ namespace BodyPosition.MVVM.View
         private DateTime selectDateTime;
 
         private Dictionary<string,UserModel> _userReadList = new Dictionary<string, UserModel>();
-
         private Dictionary<string, Dictionary<string, TestModel>> _testReadList = new Dictionary<string, Dictionary<string, TestModel>>();
 
-        private string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
-        private string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+        private Dictionary<string, UserModel> _userBackupList = new Dictionary<string, UserModel>();
+        private Dictionary<string, Dictionary<string, TestModel>> _testBackupList = new Dictionary<string, Dictionary<string, TestModel>>();
+
+        private readonly string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
+        private readonly string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+
+        private readonly string PATH_BACKUP_USER = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\UserJson.json");
+        private readonly string PATH_BACKUP_TEST = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\TestJson.json");
 
         private Database dbUserManager;
         private Database dbTestManager;
+
+        private Database dbBackUserManager;
+        private Database dbBackTestManager;
 
         public RegisterPage()
         {
@@ -47,8 +55,14 @@ namespace BodyPosition.MVVM.View
             dbUserManager = new Database(PATH_USER);
             dbTestManager = new Database(PATH_TEST);
 
+            dbBackUserManager = new Database(PATH_BACKUP_USER);
+            dbBackTestManager = new Database(PATH_BACKUP_TEST);
+
             _userReadList = dbUserManager.ReadUser();
             _testReadList = dbTestManager.ReadTest();
+
+            //_userBackupList = dbBackUserManager.ReadUser();
+            //_testBackupList = dbBackTestManager.ReadTest();
         }
 
         public int FindMax(List<int> list)
@@ -89,7 +103,6 @@ namespace BodyPosition.MVVM.View
             {
                 Age = int.Parse(age.Text);
             }
-            
 
             // check info
             if (FirstName != "" && LastName != "" && Gender != "" && Phone != "" && weight.Text != "" &&
@@ -101,7 +114,11 @@ namespace BodyPosition.MVVM.View
                     fMax.Add(index.Value.Id);
                 }
 
-                int max = FindMax(fMax);
+                int max = 0;
+                if (fMax.Count >0)
+                {
+                    max = FindMax(fMax);
+                }
 
                 UserModel newUser = new UserModel()
                 {
@@ -117,12 +134,16 @@ namespace BodyPosition.MVVM.View
                     Age = Age,
                 };
 
+                // JsonDatabase
                 _userReadList.Add(newUser.Id.ToString(), newUser);
-                dbUserManager.WriteJson(_userReadList);
+                _testReadList.Add(newUser.Id.ToString(), new Dictionary<string, TestModel>());
 
-                Dictionary<string, TestModel> newTest = new Dictionary<string, TestModel>();
-                _testReadList.Add(newUser.Id.ToString(), newTest);
+                dbUserManager.WriteJson(_userReadList);
                 dbTestManager.WriteJson(_testReadList);
+
+                // BackupDatabase
+                dbBackUserManager.WriteJson(_userReadList);
+                dbBackTestManager.WriteJson(_testReadList);
 
                 MessageBox.Show("บันทึกสำเร็จ");
                 this.Close();

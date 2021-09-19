@@ -1,6 +1,7 @@
 ﻿using BodyPosition.MVVM.Model.AngleModel;
 using BodyPosition.MVVM.Model.TestModel;
 using BodyPosition.MVVM.Model.UserModel;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -19,23 +20,50 @@ namespace BodyPosition.Core
         {
             get { return _path; }
         }
-        string PATH_ANGLE_FOLDER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle");
 
+        public readonly string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
+        public readonly string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
+        public readonly string PATH_ANGLE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle");
+
+        public readonly string PATH_BACKUP_USER = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\UserJson.json");
+        public readonly string PATH_BACKUP_TEST = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\TestJson.json");
+        public readonly string PATH_BACKUP_ANGLE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle");
 
         public Database(string path)
         {
             _path = path;
 
-            // create path
-            if (!Directory.Exists(PATH_ANGLE_FOLDER))
-            {
-                Directory.CreateDirectory(PATH_ANGLE_FOLDER);
-            }
+        }
+
+        public Database CreateUserInstance()
+        {
+            return new Database(PATH_USER);
+        }
+
+        public Database CreateTestInstance()
+        {
+            return new Database(PATH_TEST);
+        }
+
+        public Database CreateBackupUserInstance()
+        {
+            return new Database(PATH_BACKUP_USER);
+        }
+
+        public Database CreateBackupTestInstance()
+        {
+            return new Database(PATH_BACKUP_TEST);
         }
 
         private JObject ReadJson()
         {
-            JObject json = JObject.Parse(File.ReadAllText(_path));
+            //JObject json = JObject.Parse(File.ReadAllText(_path));
+            JObject json;
+            using (StreamReader file = File.OpenText(_path))
+            using (JsonTextReader reader = new JsonTextReader(file))
+            {
+                json = (JObject)JToken.ReadFrom(reader);
+            }
             return json;
         }
 
@@ -73,6 +101,11 @@ namespace BodyPosition.Core
         public void WriteJson(Dictionary<string, UserModel> user)
         {
             File.WriteAllText(_path, user.ToJson());
+        }
+
+        public void WriteJson(string json)
+        {
+            File.WriteAllText(_path, json);
         }
     }
 }

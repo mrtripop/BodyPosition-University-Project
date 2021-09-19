@@ -40,6 +40,16 @@
                                     FontSize="18"
                                     Foreground="White"
                                     Grid.Row="1"/>
+
+                        <Button x:Name="recoveryButton" 
+                            Margin="0,0,0,0"
+                                    Height="60"
+                            Width="110"
+                                    Foreground="White" 
+                                    FontSize="18"
+                                    Click="RecoveryTable" 
+                                    Content="recovery"
+                                    Grid.Row="2"/>
                     </StackPanel>
 
                     <StackPanel Orientation="Vertical" VerticalAlignment="Center">
@@ -154,7 +164,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
+                <StackPanel Grid.Row="2"  HorizontalAlignment="Center" Orientation="Horizontal">
                     <Button x:Name="importButton" 
                             Margin="100,0,0,0"
                                     Height="60"
