@@ -97,15 +97,6 @@
                     <DataGridTemplateColumn>
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Name="UpdateButton" Content="Update" Click="Update"
-                                        Width="80" />
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    
-                    <DataGridTemplateColumn>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
                                 <Button Name="DeleteButton" Content="Delete" Click="Delete"
                                         Width="80" Background="Red" BorderBrush="Red" Foreground="White"/>
                             </DataTemplate>
