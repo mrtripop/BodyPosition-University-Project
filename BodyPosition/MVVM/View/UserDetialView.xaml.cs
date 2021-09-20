@@ -1,4 +1,5 @@
 ﻿using BodyPosition.Core;
+using BodyPosition.MVVM.Model.TestModel;
 using BodyPosition.MVVM.Model.UserModel;
 using Newtonsoft.Json.Linq;
 using System;
@@ -26,6 +27,8 @@ namespace BodyPosition.MVVM.View
         private State state;
 
         private Dictionary<string, UserModel> _userDic = new Dictionary<string, UserModel>();
+        private Dictionary<string, Dictionary<string, TestModel>> _testDic = new Dictionary<string, Dictionary<string, TestModel>>();
+
         public enum State
         {
             edit = 0,
@@ -36,8 +39,13 @@ namespace BodyPosition.MVVM.View
         private Database dbUserManager;
         private Database dbUserBackup;
 
+        private Database dbTest;
+        private Database dbTestBackup;
+
         private string PATH_USER = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\UserJson.json");
+        private string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
         private string PATH_USER_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\UserJson.json");
+        private string PATH_TEST_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\TestJson.json");
 
         public UserDetialView(UserModel user)
         {
@@ -46,8 +54,12 @@ namespace BodyPosition.MVVM.View
             dbUserManager = new Database(PATH_USER);
             dbUserBackup = new Database(PATH_USER_BACKUP);
 
+            dbTest = new Database(PATH_TEST);
+            dbTestBackup = new Database(PATH_TEST_BACKUP);
+
             _user = user;
             _userDic = dbUserManager.ReadUser();
+            _testDic = dbTest.ReadTest();
 
             state = State.done;
 
@@ -127,6 +139,7 @@ namespace BodyPosition.MVVM.View
                 gUser = gender.Text;
             }
 
+            // rename & update UserModel
             UserModel nUser = new UserModel()
             {
                 FirstName = firstName.Text,
@@ -144,11 +157,36 @@ namespace BodyPosition.MVVM.View
             _userDic.Remove(_user.Id.ToString());
             _userDic.Add(_user.Id.ToString(), nUser);
 
+            _testDic.Remove(_user.Id.ToString());
+
+            foreach (var test in _testDic[_user.Id.ToString()].Values)
+            {
+                string testName = nUser.FirstName + "_" + nUser.LastName + "_" + test.Id;
+
+                TestModel nTest = new TestModel()
+                {
+                    Id = test.Id,
+                    TestName = testName,
+                    UserId = test.Id,
+                    Date = test.Date,
+                    Time = test.Time
+                };
+
+                Dictionary<string , TestModel> nDic = new Dictionary<string, TestModel>
+
+                // edite name test
+                _testDic.Add(_user.Id.ToString(), );
+
+                // rename file
+            }
+
             // JsonDatabase
             dbUserManager.WriteJson(_userDic);
+            //dbTest.WriteJson();
 
             // BackupDatabase
             dbUserBackup.WriteJson(_userDic);
+            //dbTest.WriteJson();
             
             CloseEditData();
             MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");

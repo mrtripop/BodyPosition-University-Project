@@ -89,7 +89,7 @@
                     </DataGridTemplateColumn>
 
                     <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="80" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="220" />
+                    <DataGridTextColumn Header="Test" Binding="{Binding TestName}" Width="220" IsReadOnly="True"/>
                     <DataGridTextColumn Header="User ID" Binding="{Binding UserId}" Width="150" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="150" />
                     <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="150" />
