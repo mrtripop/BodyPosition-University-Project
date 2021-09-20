@@ -28,6 +28,8 @@ namespace BodyPosition.MVVM.View
 
         private Dictionary<string, UserModel> _userDic = new Dictionary<string, UserModel>();
         private Dictionary<string, Dictionary<string, TestModel>> _testDic = new Dictionary<string, Dictionary<string, TestModel>>();
+        private Dictionary<string, Dictionary<string, TestModel>> testDic = new Dictionary<string, Dictionary<string, TestModel>>();
+        private Dictionary<string, TestModel> nDic = new Dictionary<string, TestModel>();
 
         public enum State
         {
@@ -46,6 +48,10 @@ namespace BodyPosition.MVVM.View
         private string PATH_TEST = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\TestJson.json");
         private string PATH_USER_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\UserJson.json");
         private string PATH_TEST_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\TestJson.json");
+
+
+        private string PATH_ANGLE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\");
+        private string PATH_ANGLE_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\");
 
         public UserDetialView(UserModel user)
         {
@@ -157,37 +163,56 @@ namespace BodyPosition.MVVM.View
             _userDic.Remove(_user.Id.ToString());
             _userDic.Add(_user.Id.ToString(), nUser);
 
-            _testDic.Remove(_user.Id.ToString());
-
-            foreach (var test in _testDic[_user.Id.ToString()].Values)
+            if(_user.FirstName != nUser.FirstName || _user.LastName != nUser.LastName)
             {
-                string testName = nUser.FirstName + "_" + nUser.LastName + "_" + test.Id;
+                // read ref database
+                testDic = dbTest.ReadTest();
 
-                TestModel nTest = new TestModel()
+                // remove all test user
+                _testDic.Remove(_user.Id.ToString());
+
+                foreach (var test in testDic[_user.Id.ToString()].Values)
                 {
-                    Id = test.Id,
-                    TestName = testName,
-                    UserId = test.Id,
-                    Date = test.Date,
-                    Time = test.Time
-                };
+                    string testName = nUser.FirstName + "_" + nUser.LastName + "_" + test.Id;
 
-                Dictionary<string , TestModel> nDic = new Dictionary<string, TestModel>
+                    TestModel nTest = new TestModel()
+                    {
+                        Id = test.Id,
+                        TestName = testName,
+                        UserId = test.Id,
+                        Date = test.Date,
+                        Time = test.Time
+                    };
 
-                // edite name test
-                _testDic.Add(_user.Id.ToString(), );
+                    // add test index
+                    nDic.Add(nTest.Id.ToString(), nTest);
 
-                // rename file
+                    // rename file JsonDatabase
+                    string oldfile = PATH_ANGLE+test.TestName + ".json";
+                    string newfile = PATH_ANGLE+nTest.TestName + ".json";
+
+                    File.Move(oldfile, newfile);
+
+                    // rename file BackupDatabase
+                    string oldfileB = PATH_ANGLE_BACKUP + test.TestName + ".json";
+                    string newfileB = PATH_ANGLE_BACKUP + nTest.TestName + ".json";
+
+                    File.Move(oldfileB, newfileB);
+                }
+
+                // add test user
+                _testDic.Add(_user.Id.ToString(), nDic);
+                testDic.Clear();
             }
 
             // JsonDatabase
             dbUserManager.WriteJson(_userDic);
-            //dbTest.WriteJson();
+            dbTest.WriteJson(_testDic);
 
             // BackupDatabase
             dbUserBackup.WriteJson(_userDic);
-            //dbTest.WriteJson();
-            
+            dbTestBackup.WriteJson(_testDic);
+
             CloseEditData();
             MessageBox.Show("อัพเดตข้อมูลเสร็จสิ้น");
 

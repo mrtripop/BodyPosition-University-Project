@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\obj\x64\Debug\
+E:\Kinect\v2\BodyPosition\BodyPosition\obj\x64\Debug\
 BodyPosition
 none
 false
 DEBUG;TRACE
-C:\Users\tripo\OneDrive\Desktop\BodyPosition\BodyPosition\App.xaml
+E:\Kinect\v2\BodyPosition\BodyPosition\App.xaml
 10-1286444777
 
 18-1258400736
-801960003160
+80-1608617865
 MainWindow.xaml;MVVM\View\DatabaseView.xaml;MVVM\View\HomeView.xaml;MVVM\View\RegisterPage.xaml;MVVM\View\TestSelectionView.xaml;MVVM\View\UserDetialView.xaml;MVVM\View\UserSelectionView.xaml;MVVM\Theme\ButtonTheme.xaml;MVVM\Theme\MenuButtonTheme.xaml;MVVM\Theme\TextBoxTheme.xaml;
 
 False
