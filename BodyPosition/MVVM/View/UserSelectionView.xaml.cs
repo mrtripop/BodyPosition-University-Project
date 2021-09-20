@@ -102,53 +102,58 @@ namespace BodyPosition.MVVM.View
                 return;
             }
 
-            // reload test
-            _testReadFile.Clear();
-            _testReadFile = dbTestManager.ReadTest();
-
-            // remove user
-            users.Remove(UserSelected);
-
-            // delete user
-            _userReadFile.Remove(UserSelected.Id.ToString());
-            dbUserManager.WriteJson(_userReadFile);
-
-            dbUserBackup.WriteJson(_userReadFile);
-
-            // delete angle file (delete file from folder)
-            foreach (var item in _testReadFile[UserSelected.Id.ToString()].Values)
+            string text = "คุณต้องการลบผู้ใช้ท่านนี้และการทดสอบทั้งหมดของผู้ใช้ชื่อ " + UserSelected.FirstName + " " + UserSelected.LastName+" ใช่หรือไม่";
+            var result = MessageBox.Show(text, "Delete User", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
             {
-                string PATH_ANGLE_DELETE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + item.TestName + ".json");
-                string PATH_ANGLE_BACKUP_DELETE = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + item.TestName + ".json");
+                // reload test
+                _testReadFile.Clear();
+                _testReadFile = dbTestManager.ReadTest();
 
-                // delete angle
-                if (File.Exists(PATH_ANGLE_DELETE))
+                // remove user
+                users.Remove(UserSelected);
+
+                // delete user
+                _userReadFile.Remove(UserSelected.Id.ToString());
+                dbUserManager.WriteJson(_userReadFile);
+
+                dbUserBackup.WriteJson(_userReadFile);
+
+                // delete angle file (delete file from folder)
+                foreach (var item in _testReadFile[UserSelected.Id.ToString()].Values)
                 {
-                    File.Delete(PATH_ANGLE_DELETE);
+                    string PATH_ANGLE_DELETE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + item.TestName + ".json");
+                    string PATH_ANGLE_BACKUP_DELETE = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + item.TestName + ".json");
+
+                    // delete angle
+                    if (File.Exists(PATH_ANGLE_DELETE))
+                    {
+                        File.Delete(PATH_ANGLE_DELETE);
+                    }
+
+                    if (File.Exists(PATH_ANGLE_BACKUP_DELETE))
+                    {
+                        File.Delete(PATH_ANGLE_BACKUP_DELETE);
+                    }
                 }
 
-                if (File.Exists(PATH_ANGLE_BACKUP_DELETE))
-                {
-                    File.Delete(PATH_ANGLE_BACKUP_DELETE);
-                }
+                // delete test
+                _testReadFile.Remove(UserSelected.Id.ToString());
+                dbTestManager.WriteJson(_testReadFile);
+
+                dbTestBackup.WriteJson(_testReadFile);
+
+                // clear value
+                users.Clear();
+                _userReadFile.Clear();
+                _testReadFile.Clear();
+
+                // reload value
+                _userReadFile = dbUserManager.ReadUser();
+
+                LoadUser();
+                refreshList();
             }
-
-            // delete test
-            _testReadFile.Remove(UserSelected.Id.ToString());
-            dbTestManager.WriteJson(_testReadFile);
-
-            dbTestBackup.WriteJson(_testReadFile);
-
-            // clear value
-            users.Clear();
-            _userReadFile.Clear();
-            _testReadFile.Clear();
-
-            // reload value
-            _userReadFile = dbUserManager.ReadUser();
-
-            LoadUser();
-            refreshList();
         }
 
         private void Update(object sender, RoutedEventArgs e)

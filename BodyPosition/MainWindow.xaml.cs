@@ -26,13 +26,6 @@ namespace BodyPosition
         public readonly string PATH_USER_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\UserJson.json");
         public readonly string PATH_TEST_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\TestJson.json");
 
-        private Database user;
-        private Database test;
-        private Database userBackup;
-        private Database testBackup;
-
-        string json = "{}";
-
         public MainWindow()
         {
             InitializeComponent();
