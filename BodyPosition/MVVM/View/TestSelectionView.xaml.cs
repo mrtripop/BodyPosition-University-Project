@@ -119,8 +119,8 @@ namespace BodyPosition.MVVM.View
 
         private void Insert(object sender, RoutedEventArgs e)
         {
-            // calculate value
-            DateTime currentTime = DateTime.Now;
+                // calculate value
+                DateTime currentTime = DateTime.Now;
             List<int> fMax = new List<int>();
             foreach (var index in _testSelectedByUserID)
             {
@@ -191,37 +191,42 @@ namespace BodyPosition.MVVM.View
                 return;
             }
 
-            // delete test
-            _testReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
-            dbTestManager.WriteJson(_testReadFile);
-            dbTestBackup.WriteJson(_testReadFile);
-
-            string PATH_ANGLE_DELETE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + TestSelected.TestName + ".json");
-            string PATH_ANGLE_DELETE_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + TestSelected.TestName + ".json");
-
-            // delete angle
-            if (File.Exists(PATH_ANGLE_DELETE))
-            {   
-                File.Delete(PATH_ANGLE_DELETE);
-            }
-
-            if (File.Exists(PATH_ANGLE_DELETE_BACKUP))
+            string text = "คุณต้องการลบการทดสอบ " + TestSelected.TestName+" ใช่หรือไม่";
+            var result = MessageBox.Show(text, "Delete User", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
             {
-                File.Delete(PATH_ANGLE_DELETE_BACKUP);
+                // delete test
+                _testReadFile[UserModel.Id.ToString()].Remove(TestSelected.Id.ToString());
+                dbTestManager.WriteJson(_testReadFile);
+                dbTestBackup.WriteJson(_testReadFile);
+
+                string PATH_ANGLE_DELETE = Path.Combine(Environment.CurrentDirectory, @"JsonDatabase\Angle\" + TestSelected.TestName + ".json");
+                string PATH_ANGLE_DELETE_BACKUP = Path.Combine(Environment.CurrentDirectory, @"BackupDatabase\Angle\" + TestSelected.TestName + ".json");
+
+                // delete angle
+                if (File.Exists(PATH_ANGLE_DELETE))
+                {
+                    File.Delete(PATH_ANGLE_DELETE);
+                }
+
+                if (File.Exists(PATH_ANGLE_DELETE_BACKUP))
+                {
+                    File.Delete(PATH_ANGLE_DELETE_BACKUP);
+                }
+
+                // clear value
+                test.Clear();
+
+                _testSelectedByUserID.Clear();
+                _testReadFile.Clear();
+
+                // reload value
+                _testReadFile = dbTestManager.ReadTest();
+
+                // update ui
+                LoadTest(UserModel);
+                refreshTest();
             }
-
-            // clear value
-            test.Clear();
-
-            _testSelectedByUserID.Clear();
-            _testReadFile.Clear();
-
-            // reload value
-            _testReadFile = dbTestManager.ReadTest();
-
-            // update ui
-            LoadTest(UserModel);
-            refreshTest();
         }
 
         private void Selected(object sender, RoutedEventArgs e)
