@@ -179,7 +179,7 @@ namespace BodyPosition.MVVM.View
                     {
                         Id = test.Id,
                         TestName = testName,
-                        UserId = test.Id,
+                        UserId = test.UserId,
                         Date = test.Date,
                         Time = test.Time
                     };
